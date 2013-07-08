@@ -1,0 +1,12 @@
+.repl_history
+.*.sw?
+build
+ext/build-*
+vendor/motion_data/ext/build-*
+ext/ext.bridgesupport
+resources/*.nib
+resources/*.momd
+resources/*.storyboardc
+examples/**/*.nib
+tags
+.rbenv-version
