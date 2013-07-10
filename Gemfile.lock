@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    cdq (0.0.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -19,6 +24,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cdq!
   motion-stump
   rake
   ruby-xcdm
