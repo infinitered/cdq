@@ -70,12 +70,37 @@ module CDQ
 
     # Save all contexts in the stack, starting with the current and working down.
     #
-    def save
+    def save(options = {})
+      always_wait = options[:always_wait]
       stack.reverse.each do |context|
-        with_error_object do |error|
-          context.save(error)
+        if always_wait || context.concurrencyType == NSMainQueueConcurrencyType
+          context.performBlockAndWait( -> {
+
+            with_error_object do |error|
+              context.save(error)
+            end
+
+          } )
+        elsif context.concurrencyType == NSPrivateQueueConcurrencyType
+          context.performBlock( -> {
+
+            # Let the application know we're doing something important
+            task_id = UIApplication.sharedApplication.beginBackgroundTaskWithExpirationHandler( -> { puts "oops" } )
+
+            with_error_object do |error|
+              context.save(error)
+            end
+
+            UIApplication.sharedApplication.endBackgroundTask(task_id)
+
+          } )
+        else
+          with_error_object do |error|
+            context.save(error)
+          end
         end
       end
+      true
     end
 
     private
@@ -142,6 +167,6 @@ module CDQ
       end 
     end
 
-  end
+end
 
 end

@@ -25,6 +25,7 @@ module CDQ
     def setup(opts = {})
       contexts.new(NSPrivateQueueConcurrencyType)
       contexts.new(NSMainQueueConcurrencyType)
+      true
     end
 
     def save

@@ -68,7 +68,7 @@ module CDQ
       main_saved = false
       root.stub!(:save) { root_saved = true }
       main.stub!(:save) { main_saved = true }
-      @cc.save
+      @cc.save(always_wait: true)
 
       root_saved.should == true
       main_saved.should == true
