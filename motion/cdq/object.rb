@@ -28,8 +28,8 @@ module CDQ
       true
     end
 
-    def save
-      contexts.save
+    def save(*args)
+      contexts.save(*args)
     end
 
     protected

@@ -141,7 +141,7 @@ module CDQ #:nodoc:
     end
 
     def new(opts = {})
-      self.class.new(@entity_description, @target_class, locals.merge(opts))
+      CDQTargetedQuery.new(@entity_description, @target_class, locals.merge(opts))
     end
 
   end
