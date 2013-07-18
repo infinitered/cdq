@@ -45,6 +45,7 @@ module CDQ #:nodoc:
         context.executeFetchRequest(fetch_request, error:error)
       end
     end
+    alias_method :to_a, :array
 
     # Convenience method for referring to all matching entities.  No-op.  You must
     # still call <tt>array</tt> or another executing method
@@ -96,10 +97,19 @@ module CDQ #:nodoc:
     # Create a new entity in the current context.  Accepts a hash of attributes that will be assigned to 
     # the newly-created entity.  Does not save the context.
     #
-    def create(opts = {})
+    def new(opts = {})
       @target_class.alloc.initWithEntity(@entity_description, insertIntoManagedObjectContext: context).tap do |entity|
         opts.each { |k, v| entity.send("#{k}=", v) }
       end
+    end
+
+    # Create a new entity in the current context.  Accepts a hash of attributes that will be assigned to 
+    # the newly-created entity.  Does not save the context.
+    #
+    # [TODO: Will apply validation.]
+    #
+    def create(*args)
+      new(*args)
     end
 
     # Create a named scope.  The query is any valid CDQ query.
@@ -126,7 +136,7 @@ module CDQ #:nodoc:
     # will have no effect when running this. 
     #
     def in_context(context)
-      new(context: context)
+      clone(context: context)
     end
 
     # Any unknown method will be checked against the list of named scopes.
@@ -150,7 +160,7 @@ module CDQ #:nodoc:
       @@named_scopes[@entity_description] ||= {}
     end
 
-    def new(opts = {})
+    def clone(opts = {})
       CDQTargetedQuery.new(@entity_description, @target_class, locals.merge(opts))
     end
 

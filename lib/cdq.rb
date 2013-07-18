@@ -1,22 +1,12 @@
 
 unless defined?(Motion::Project::App)
-  raise "This must required from within a RubyMotion Rakefile"
+  raise "This must be required from within a RubyMotion Rakefile"
 end
 
 Motion::Project::App.setup do |app|
-
-  app.files.unshift(File.join(File.dirname(__FILE__), "../motion/cdq.rb"))
-
-  %w{
-    object.rb
-    context.rb
-    store.rb
-    model.rb
-    partial_predicate.rb
-    query.rb
-    targeted_query.rb
-    managed_object.rb
-  }.map { |f| File.join(File.dirname(__FILE__), "../motion/cdq/#{f}") }.each { |f| app.files.unshift(f) }
-
+  parent = File.join(File.dirname(__FILE__), '..')
+  app.files.unshift(Dir.glob(File.join(parent, "motion/cdq/**/*.rb")))
+  app.files.unshift(Dir.glob(File.join(parent, "motion/*.rb")))
   app.frameworks += %w{ CoreData }
+  app.vendor_project(File.join(parent, 'vendor/cdq/ext'), :static)
 end

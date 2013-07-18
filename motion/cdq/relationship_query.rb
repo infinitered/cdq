@@ -17,7 +17,7 @@ module CDQ
 
     # Creates a new managed object within the target relationship
     # 
-    def create(opts = {})
+    def new(opts = {})
       super(opts.merge(@inverse_rel_name => @owner)) do |obj|
         @set.addObject obj
       end

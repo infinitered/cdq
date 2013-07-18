@@ -58,6 +58,10 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
       end
     end
 
+    def new(*args)
+      cdq.new(*args)
+    end
+
     # Pass any unknown methods on to cdq. 
     #
     def method_missing(name, *args, &block)

@@ -18,7 +18,7 @@ module CDQ
       if value == EMPTY
         @limit
       else
-        new(limit: value)
+        clone(limit: value)
       end
     end
 
@@ -26,7 +26,7 @@ module CDQ
       if value == EMPTY
         @offset
       else
-        new(offset: value)
+        clone(offset: value)
       end
     end
 
@@ -47,7 +47,7 @@ module CDQ
 
     # Create a new query with the same values as this one, optionally overriding
     # any of them in the options
-    def new(opts = {})
+    def clone(opts = {})
       self.class.new(locals.merge(opts))
     end
 
@@ -65,7 +65,7 @@ module CDQ
         ascending = true
       end
 
-      new(sort_descriptors: @sort_descriptors + [NSSortDescriptor.sortDescriptorWithKey(key, ascending: ascending)])
+      clone(sort_descriptors: @sort_descriptors + [NSSortDescriptor.sortDescriptorWithKey(key, ascending: ascending)])
     end
 
     def fetch_request
@@ -120,7 +120,7 @@ module CDQ
       else
         new_predicate = other_predicate
       end
-      new(predicate: new_predicate, limit: new_limit, offset: new_offset, sort_descriptors: new_sort_descriptors, saved_key: key_to_save)
+      clone(predicate: new_predicate, limit: new_limit, offset: new_offset, sort_descriptors: new_sort_descriptors, saved_key: key_to_save)
     end
 
   end

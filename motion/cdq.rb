@@ -48,4 +48,11 @@ module CDQ
     end
   end
 
+  def self.pollute(klass)
+  end
+
+end
+
+class UIResponder
+  include CDQ
 end
