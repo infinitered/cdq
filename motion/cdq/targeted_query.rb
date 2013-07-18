@@ -1,12 +1,6 @@
 
 module CDQ #:nodoc:
 
-  class CDQObject #:nodoc:
-  end
-
-  class CDQQuery < CDQObject #:nodoc:
-  end
-
   class CDQTargetedQuery < CDQQuery
 
     include Enumerable
@@ -116,8 +110,14 @@ module CDQ #:nodoc:
     #
     # cdq('Author').first_published.first => #<Author>
     #
-    def scope(name, query)
-      named_scopes[name] = query
+    def scope(name, query = nil, &block)
+      if query.nil? && block_given?
+        named_scopes[name] = block
+      elsif query
+        named_scopes[name] = query
+      else
+        raise ArgumentError.new("You must supply a query OR a block that returns a query to scope")
+      end
     end
 
     # Override the context in which to perform this query.  This forever forces the
@@ -132,7 +132,15 @@ module CDQ #:nodoc:
     # Any unknown method will be checked against the list of named scopes.
     #
     def method_missing(name, *args)
-      named_scopes[name] || super(name, *args)
+      scope = named_scopes[name]
+      case scope
+      when CDQQuery
+        where(scope)
+      when Proc
+        where(scope.call(*args))
+      else
+        super(name, *args)
+      end
     end
 
     private

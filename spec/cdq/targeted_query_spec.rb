@@ -104,5 +104,17 @@ module CDQ
       @tq.scope :two_sorted_by_name, @tq.sort_by(:name).limit(2)
       @tq.two_sorted_by_name.array.should == [@tseliot, @dante]
     end
+
+    it "can create a dynamic named scope" do
+      tq = cdq(Article)
+      a = tq.create(publishedAt: Time.local(2001))
+      b = tq.create(publishedAt: Time.local(2002))
+      c = tq.create(publishedAt: Time.local(2003))
+      d = tq.create(publishedAt: Time.local(2004))
+
+      tq.scope :date_span { |start_date, end_date| cdq(:publishedAt).lt(end_date).and.ge(start_date) }
+      tq.date_span(Time.local(2002), Time.local(2004)).sort_by(:publishedAt).array.should == [b, c]
+      Article.published_since(Time.local(2003)).sort_by(:publishedAt).array.should == [c, d]
+    end
   end
 end

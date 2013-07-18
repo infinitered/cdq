@@ -45,17 +45,23 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     # Creates a CDQ scope, but also defines a method on the class that returns the 
     # query directly.
     #
-    def scope(name, query)
-      cdq.scope name, query
-      self.class.send(:define_method, name) do |*args|
-        query
+    def scope(name, query = nil, &block)
+      cdq.scope(name, query, &block)
+      if query
+        self.class.send(:define_method, name) do 
+          query
+        end
+      else
+        self.class.send(:define_method, name) do |*args|
+          block.call(*args)
+        end
       end
     end
 
     # Pass any unknown methods on to cdq. 
     #
-    def method_missing(name, *args)
-      cdq.send(name, *args)
+    def method_missing(name, *args, &block)
+      cdq.send(name, *args, &block)
     end
 
     def responds_to?(name)
