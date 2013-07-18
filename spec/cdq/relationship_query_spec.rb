@@ -27,6 +27,11 @@ module CDQ
       @rq.first.should != nil
       @rq.first.class.should == Article_Article_
     end
+
+    it "should be able to use named scopes" do
+      cdq(@author).articles.all_published.array.should == [@article1]
+    end
+
   end
 
 end
