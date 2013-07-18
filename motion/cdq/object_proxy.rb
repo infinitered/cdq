@@ -10,18 +10,21 @@ module CDQ
       @object
     end
 
+    def respond_to?(method)
+      super(method) || @object.entity.relationshipsByName[method]
+    end
+
     def method_missing(*args)
       if @object.entity.relationshipsByName[args.first]
         CDQRelationshipQuery.new(@object, args.first)
-      elsif @object.respond_to?(args.first)
-        @object.send(*args)
+      else
+        super(*args)
       end
     end
 
-    def ==(other)
-      super(other) || @object == other
+    def destroy
+      @object.managedObjectContext.deleteObject(@object)
     end
-
   end
 end
 

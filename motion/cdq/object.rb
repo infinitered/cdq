@@ -3,6 +3,8 @@ module CDQ
 
   class CDQObject
 
+    include CDQ
+
     def contexts
       @@context_manager ||= CDQContextManager.new(store_coordinator: stores.current)
     end

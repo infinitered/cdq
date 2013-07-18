@@ -34,6 +34,14 @@ module CDQ
       CDQPartialPredicate.new(obj, CDQQuery.new)
     when CDQObject
       obj
+    when NSManagedObject
+      CDQObjectProxy.new(obj)
+    when Array
+      if obj.first.class.isSubclassOfClass(NSManagedObject)
+        CDQCollectionProxy.new(obj, obj.first.entity)
+      else
+        @@base_object
+      end
     else
       @@base_object
     end

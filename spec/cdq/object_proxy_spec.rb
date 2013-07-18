@@ -23,17 +23,14 @@ module CDQ
       @op.get.should == @author
     end
 
-    it "can forward messages to its object" do
-      @op.name.should == @author.name
-    end
-
     it "wraps relations in CDQRelationshipQuery objects" do
       @op.articles.class.should == CDQRelationshipQuery
       @op.articles.first.should == @article
     end
 
-    it "considers itself == to its target" do
-      @op.should == @author
+    it "can delete the underlying object" do
+      @op.destroy
+      Author.count.should == 0
     end
 
   end
