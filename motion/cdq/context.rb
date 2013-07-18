@@ -3,6 +3,8 @@ module CDQ
 
   class CDQContextManager
 
+    BACKGROUND_SAVE_NOTIFICATION = 'com.infinitered.cdq.context.background_save_completed'
+
     def initialize(opts = {})
       @store_coordinator = opts[:store_coordinator]
     end
@@ -92,6 +94,8 @@ module CDQ
             end
 
             UIApplication.sharedApplication.endBackgroundTask(task_id)
+
+            NSNotificationCenter.defaultCenter.postNotificationName(BACKGROUND_SAVE_NOTIFICATION, object: context)
 
           } )
         else
