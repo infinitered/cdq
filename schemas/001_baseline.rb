@@ -10,6 +10,7 @@ schema "0.0.1" do
     string    :title,       optional: false
 
     belongs_to   :author
+    has_many :citations
   end
 
   entity "Author" do
@@ -25,6 +26,12 @@ schema "0.0.1" do
 
   entity "Publisher", class_name: 'CDQManagedObject' do 
     string :name, optional: false
+  end
+
+  entity "Citation" do
+    string     :journal
+    datetime   :timestamp
+    belongs_to :article
   end
 
 end

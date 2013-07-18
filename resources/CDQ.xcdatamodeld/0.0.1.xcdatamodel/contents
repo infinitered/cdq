@@ -7,6 +7,7 @@
     <attribute optional="YES" syncable="YES" attributeType="Date" name="publishedAt" defaultValueString="NO"/>
     <attribute optional="NO" syncable="YES" attributeType="String" name="title"/>
     <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="author" inverseEntity="Author" destinationEntity="Author" inverseName="articles" maxCount="1" minCount="1"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="citations" inverseEntity="Citation" destinationEntity="Citation" inverseName="article" maxCount="-1" minCount="1"/>
   </entity>
   <entity name="Author" syncable="YES" representedClassName="Author">
     <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
@@ -19,5 +20,10 @@
   </entity>
   <entity name="Publisher" syncable="YES" representedClassName="CDQManagedObject">
     <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
+  </entity>
+  <entity name="Citation" syncable="YES" representedClassName="Citation">
+    <attribute optional="YES" syncable="YES" attributeType="String" name="journal"/>
+    <attribute optional="YES" syncable="YES" attributeType="Date" name="timestamp"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="article" inverseEntity="Article" destinationEntity="Article" inverseName="citations" maxCount="1" minCount="1"/>
   </entity>
 </model>

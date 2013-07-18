@@ -12,6 +12,7 @@ module CDQ
       :gt => [NSGreaterThanPredicateOperatorType, :greater_than],
       :ge => [NSGreaterThanOrEqualToPredicateOperatorType, :greater_than_or_equal],
       :contains => [NSContainsPredicateOperatorType, :include],
+      :matches => [NSMatchesPredicateOperatorType],
       :in => [NSInPredicateOperatorType],
       :begins_with => [NSBeginsWithPredicateOperatorType],
       :ends_with => [NSEndsWithPredicateOperatorType]
