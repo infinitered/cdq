@@ -23,7 +23,7 @@ schema "0.0.1" do
     float :fee
   end
 
-  entity "Publisher" do # No class for this one
+  entity "Publisher", class_name: 'CDQManagedObject' do 
     string :name, optional: false
   end
 

@@ -1,9 +1,8 @@
 .repl_history
 .*.sw?
 build
-ext/build-*
-vendor/motion_data/ext/build-*
-ext/ext.bridgesupport
+vendor/cdq/ext/build-*
+vendor/cdq/ext/ext.bridgesupport
 resources/*.nib
 resources/*.momd
 resources/*.storyboardc

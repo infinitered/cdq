@@ -16,17 +16,7 @@ module CDQ
 
     def load_model
       modelURL = NSBundle.mainBundle.URLForResource(@name, withExtension: "momd");
-      NSManagedObjectModel.alloc.initWithContentsOfURL(modelURL).mutableCopy.tap do |model|
-        model.entitiesByName.each do |name, entityDesc|
-          if entityDesc.managedObjectClassName.nil? || entityDesc.managedObjectClassName == "NSManagedObject"
-            if Object.const_defined?(name.to_sym)
-              entityDesc.managedObjectClassName = name
-            else
-              entityDesc.managedObjectClassName = "CDQManagedObject"
-            end
-          end
-        end
-      end
+      NSManagedObjectModel.alloc.initWithContentsOfURL(modelURL)
     end
 
   end

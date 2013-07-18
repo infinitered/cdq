@@ -50,6 +50,13 @@ module CDQ
       cdq('Publisher').where(:name).include("Random").first.should == nil
     end
 
+    it "returns relationship sets which can behave like CDQRelationshipQuery objects" do
+      eec = Author.create(name: 'eecummings')
+      art = eec.articles.create(title: 'something here')
+      p art.class
+      eec.articles.sort_by(:title).first.should == art
+    end
+
     describe "CDQ Managed Object scopes" do
 
       before do

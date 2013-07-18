@@ -1,13 +1,13 @@
-class Author < CDQ::CDQManagedObject
+class Author < CDQManagedObject
 end
 
-class Article < CDQ::CDQManagedObject
+class Article < CDQManagedObject
   #scope :all_published, where(:published => true)
   scope :all_published, where(:published).eq(true)
   scope :with_title, where(:title).ne(nil).sort_by(:title, :descending)
   #scope :published_since { |date| all.where(value(:publishedAt) > date) }
 end
 
-class Writer < CDQ::CDQManagedObject
+class Writer < CDQManagedObject
 end
 

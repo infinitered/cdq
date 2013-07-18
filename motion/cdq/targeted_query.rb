@@ -11,13 +11,15 @@ module CDQ #:nodoc:
 
     include Enumerable
 
+    attr_reader :entity_description
+
     # Create a new CDQTargetedContext.  Takes an entity description, an optional
     # implementation class, and a hash of options that will be passed to the CDQQuery
     # constructor.
     #
-    def initialize(entity_description, target_class = CDQManagedObject, opts = {})
+    def initialize(entity_description, target_class = nil, opts = {})
       @entity_description = entity_description
-      @target_class = target_class
+      @target_class = target_class || NSClassFromString(entity_description.managedObjectClassName)
       @context = opts.delete(:context)
       super(opts)
     end

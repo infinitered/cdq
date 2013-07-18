@@ -26,10 +26,11 @@ module CDQ
       end
     when String
       entity_description = @@base_object.models.current.entitiesByName[obj]
+      target_class = NSClassFromString(entity_description.managedObjectClassName)
       if entity_description.nil?
         raise "Cannot find an entity named #{obj}"
       end
-      CDQTargetedQuery.new(entity_description)
+      CDQTargetedQuery.new(entity_description, target_class)
     when Symbol
       CDQPartialPredicate.new(obj, CDQQuery.new)
     when CDQObject

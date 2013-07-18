@@ -6,6 +6,8 @@ Motion::Project::App.setup do |app|
   app.name = 'CDQ'
   app.files  = Dir['motion/**/*.rb'] + Dir['app/**/*.rb']
   app.frameworks += %w{ CoreData }
+
+  app.vendor_project('vendor/cdq/ext', :static)
 end
 
 require 'motion-stump'
