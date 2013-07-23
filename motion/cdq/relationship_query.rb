@@ -30,8 +30,8 @@ module CDQ
     end
 
     # A Core Data relationship set is extended with this module to provide
-    # scoping by forwarding messages to a CDQRelationshipQuery instance which
-    # wraps the set.
+    # scoping by forwarding messages to a CDQRelationshipQuery instance knows
+    # how to create further queries based on the underlying relationship.
     module SetExt
       attr_accessor :__query__
 

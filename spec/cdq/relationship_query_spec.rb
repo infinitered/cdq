@@ -12,10 +12,10 @@ module CDQ
       cdq.setup
 
       @author = Author.create(name: "eecummings")
-      @article1 = Article.create(body: "", published: true, publishedAt: Time.local(1922), title: "The Enormous Room")
-      @author.articles.addObject(@article1)
+      @article1 = @author.articles.create(author: @author, body: "", published: true, publishedAt: Time.local(1922), title: "The Enormous Room")
 
       cdq.save(always_wait: true)
+
     end
 
     after do

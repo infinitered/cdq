@@ -81,6 +81,10 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     managedObjectContext.deleteObject(self)
   end
 
+  def inspect
+    description
+  end
+
   protected
 
   # Called from method that's dynamically added from
