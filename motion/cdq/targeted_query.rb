@@ -13,7 +13,9 @@ module CDQ #:nodoc:
     #
     def initialize(entity_description, target_class = nil, opts = {})
       @entity_description = entity_description
-      @target_class = target_class || NSClassFromString(entity_description.managedObjectClassName)
+      @target_class = target_class ||
+        NSClassFromString(entity_description.managedObjectClassName) ||
+        CDQManagedObject
       @context = opts.delete(:context)
       super(opts)
     end
