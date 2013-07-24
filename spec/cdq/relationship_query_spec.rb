@@ -43,6 +43,21 @@ module CDQ
       cdq(first).writers.where(:name).contains("a").array.should == [ram]
     end
 
+    it "can add objects to the relationship" do
+      article = Article.create(body: "bank")
+      @author.articles.add(article)
+      @author.articles.where(body: "bank").first.should == article
+      article.author.should == @author
+
+      ram = Writer.create(name: "Ram Das")
+      ram.spouses.add cdq('Spouse').create
+      ram.spouses << cdq('Spouse').create
+
+      ram.spouses.count.should == 2
+      ram.spouses.first.writers.count.should == 1
+
+    end
+
   end
 
 end

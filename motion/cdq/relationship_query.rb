@@ -23,14 +23,21 @@ module CDQ
     # 
     def new(opts = {})
       super(opts).tap do |obj|
-        if @inverse_rel.isToMany
-          obj.send(@inverse_rel.name).addObject(@owner)
-        else
-          obj.send("#{@inverse_rel.name}=", @owner)
-        end
-        @set.addObject obj
+        add(obj)
       end
     end
+
+    # Add an existing object to the relationship
+    # 
+    def add(obj)
+      if @inverse_rel.isToMany
+        obj.send(@inverse_rel.name).addObject(@owner)
+      else
+        obj.send("#{@inverse_rel.name}=", @owner)
+      end
+      @set.addObject obj
+    end
+    alias_method :<<, :add
 
     def self.extend_set(set, owner, name)
       set.extend SetExt
