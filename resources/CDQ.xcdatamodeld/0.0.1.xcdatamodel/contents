@@ -17,6 +17,10 @@
   <entity name="Writer" syncable="YES" representedClassName="Writer">
     <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
     <attribute optional="YES" syncable="YES" attributeType="Float" name="fee" defaultValueString="0.0"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="spouses" inverseEntity="Spouse" destinationEntity="Spouse" inverseName="writers" maxCount="-1" minCount="1" ordered="YES"/>
+  </entity>
+  <entity name="Spouse" syncable="YES" representedClassName="CDQManagedObject">
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="writers" inverseEntity="Writer" destinationEntity="Writer" inverseName="spouses" maxCount="-1" minCount="1"/>
   </entity>
   <entity name="Publisher" syncable="YES" representedClassName="CDQManagedObject">
     <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>

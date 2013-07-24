@@ -22,6 +22,13 @@ schema "0.0.1" do
   entity "Writer" do
     string :name, optional: false
     float :fee
+
+    has_many :spouses, inverse: "Spouse.writers", ordered: true
+  end
+
+  entity "Spouse", class_name: "CDQManagedObject" do
+
+    has_many :writers, inverse: "Writer.spouses"
   end
 
   entity "Publisher", class_name: 'CDQManagedObject' do 

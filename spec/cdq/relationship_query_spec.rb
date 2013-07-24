@@ -32,6 +32,17 @@ module CDQ
       cdq(@author).articles.all_published.array.should == [@article1]
     end
 
+    it "can handle many-to-many correctly" do
+      ram = Writer.create(name: "Ram Das")
+      first = ram.spouses.create
+      second = ram.spouses.create
+      ram.spouses.array.should == [first, second]
+      cdq(first).writers.array.should == [ram]
+      cdq(second).writers.array.should == [ram]
+      cdq(first).writers.where(:name).contains("o").array.should == []
+      cdq(first).writers.where(:name).contains("a").array.should == [ram]
+    end
+
   end
 
 end

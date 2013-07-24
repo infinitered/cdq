@@ -8,17 +8,26 @@ module CDQ
       @relationship_name = name
       @set = set || @owner.send(name)
       relationship = owner.entity.relationshipsByName[name]
-      @inverse_rel_name = relationship.inverseRelationship.name.to_sym 
+      @inverse_rel = relationship.inverseRelationship
       entity_description = relationship.destinationEntity
       target_class = constantize(entity_description.managedObjectClassName)
       super(entity_description, target_class, opts)
-      @predicate = self.where(@inverse_rel_name => @owner).predicate
+      if @inverse_rel.isToMany
+        @predicate = self.where(@inverse_rel.name.to_sym).contains(@owner).predicate
+      else
+        @predicate = self.where(@inverse_rel.name.to_sym => @owner).predicate
+      end
     end
 
     # Creates a new managed object within the target relationship
     # 
     def new(opts = {})
-      super(opts.merge(@inverse_rel_name => @owner)) do |obj|
+      super(opts).tap do |obj|
+        if @inverse_rel.isToMany
+          obj.send(@inverse_rel.name).addObject(@owner)
+        else
+          obj.send("#{@inverse_rel.name}=", @owner)
+        end
         @set.addObject obj
       end
     end
@@ -37,6 +46,14 @@ module CDQ
 
       def set
         self
+      end
+
+      def array
+        self.allObjects
+      end
+
+      def first
+        array.first
       end
 
       def respond_to?(method)
