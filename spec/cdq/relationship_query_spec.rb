@@ -58,6 +58,19 @@ module CDQ
 
     end
 
+    it "iterates over ordered sets correctly" do
+      writer = Writer.create
+      two = cdq('Spouse').create(name: "1")
+      three = cdq('Spouse').create(name: "2")
+      one = writer.spouses.create(name: "3")
+      writer.spouses << two
+      writer.spouses << three
+      list = [one, two, three]
+      writer.spouses.each do |s|
+        s.should == list.shift
+      end
+    end
+
   end
 
 end

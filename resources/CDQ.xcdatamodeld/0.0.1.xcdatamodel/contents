@@ -6,21 +6,22 @@
     <attribute optional="YES" syncable="YES" attributeType="Boolean" name="published" defaultValueString="NO"/>
     <attribute optional="YES" syncable="YES" attributeType="Date" name="publishedAt" defaultValueString="NO"/>
     <attribute optional="NO" syncable="YES" attributeType="String" name="title"/>
-    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="author" inverseEntity="Author" destinationEntity="Author" inverseName="articles" maxCount="1" minCount="1"/>
-    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="citations" inverseEntity="Citation" destinationEntity="Citation" inverseName="article" maxCount="-1" minCount="1"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="author" inverseEntity="Author" destinationEntity="Author" inverseName="articles" maxCount="1"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="citations" inverseEntity="Citation" destinationEntity="Citation" inverseName="article" toMany="YES"/>
   </entity>
   <entity name="Author" syncable="YES" representedClassName="Author">
     <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
     <attribute optional="YES" syncable="YES" attributeType="Float" name="fee" defaultValueString="0.0"/>
-    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="articles" inverseEntity="Article" destinationEntity="Article" inverseName="author" maxCount="-1" minCount="1"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="articles" inverseEntity="Article" destinationEntity="Article" inverseName="author" toMany="YES"/>
   </entity>
   <entity name="Writer" syncable="YES" representedClassName="Writer">
     <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
     <attribute optional="YES" syncable="YES" attributeType="Float" name="fee" defaultValueString="0.0"/>
-    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="spouses" inverseEntity="Spouse" destinationEntity="Spouse" inverseName="writers" maxCount="-1" minCount="1" ordered="YES"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="spouses" inverseEntity="Spouse" destinationEntity="Spouse" inverseName="writers" toMany="YES" ordered="YES"/>
   </entity>
   <entity name="Spouse" syncable="YES" representedClassName="CDQManagedObject">
-    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="writers" inverseEntity="Writer" destinationEntity="Writer" inverseName="spouses" maxCount="-1" minCount="1"/>
+    <attribute optional="YES" syncable="YES" attributeType="String" name="name"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="writers" inverseEntity="Writer" destinationEntity="Writer" inverseName="spouses" toMany="YES"/>
   </entity>
   <entity name="Publisher" syncable="YES" representedClassName="CDQManagedObject">
     <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
@@ -28,6 +29,6 @@
   <entity name="Citation" syncable="YES" representedClassName="Citation">
     <attribute optional="YES" syncable="YES" attributeType="String" name="journal"/>
     <attribute optional="YES" syncable="YES" attributeType="Date" name="timestamp"/>
-    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="article" inverseEntity="Article" destinationEntity="Article" inverseName="citations" maxCount="1" minCount="1"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="article" inverseEntity="Article" destinationEntity="Article" inverseName="citations" maxCount="1"/>
   </entity>
 </model>

@@ -55,12 +55,20 @@ module CDQ
         self
       end
 
+      # This works in a special way.  If we're extending a regular NSSet, it will 
+      # create a new method that calls allObjects.  If we're extending a NSOrderedSet,
+      # the override will not work, and we get the array method already defined on
+      # NSOrderedSet, which is actually exactly what we want.
       def array
         self.allObjects
       end
 
       def first
         array.first
+      end
+
+      def each(*args, &block)
+        array.each(*args, &block)
       end
 
       def respond_to?(method)

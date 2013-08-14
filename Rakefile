@@ -18,3 +18,5 @@ end
 require 'cdq'
 require 'motion-stump'
 require 'ruby-xcdm'
+
+task :"build:simulator" => :"schema:build"

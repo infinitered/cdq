@@ -27,7 +27,7 @@ schema "0.0.1" do
   end
 
   entity "Spouse", class_name: "CDQManagedObject" do
-
+    string :name, optional: true
     has_many :writers, inverse: "Writer.spouses"
   end
 
