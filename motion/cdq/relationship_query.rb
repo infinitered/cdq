@@ -108,7 +108,7 @@ module CDQ
       end
 
       def method_missing(method, *args, &block)
-        if respond_to?(method)
+        if @__query__.respond_to?(method)
           @__query__.send(method, *args, &block)
         else
           super
