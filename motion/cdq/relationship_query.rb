@@ -41,6 +41,7 @@ module CDQ
 
     def self.extend_set(set, owner, name)
       set.extend SetExt
+      set.extend Enumerable
       set.__query__ = self.new(owner, name, set)
       set
     end
@@ -67,12 +68,43 @@ module CDQ
         array.first
       end
 
+      # duplicating a lot of common methods because it's way faster than using method_missing
+      #
       def each(*args, &block)
         array.each(*args, &block)
       end
 
+      def add(obj)
+        @__query__.add(obj)
+      end
+      alias_method :<<, :add
+
+      def create(opts = {})
+        @__query__.create(opts)
+      end
+
+      def new(opts = {})
+        @__query__.new(opts)
+      end
+
+      def where(*args)
+        @__query__.where(*args)
+      end
+
+      def sort_by(*args)
+        @__query__.sort_by(*args)
+      end
+
+      def limit(*args)
+        @__query__.limit(*args)
+      end
+
+      def offset(*args)
+        @__query__.offset(*args)
+      end
+
       def respond_to?(method)
-        @__query__.respond_to?(method) || super(method)
+        super(method) || @__query__.respond_to?(method)
       end
 
       def method_missing(method, *args, &block)

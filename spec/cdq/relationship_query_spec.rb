@@ -65,10 +65,8 @@ module CDQ
       one = writer.spouses.create(name: "3")
       writer.spouses << two
       writer.spouses << three
-      list = [one, two, three]
-      writer.spouses.each do |s|
-        s.should == list.shift
-      end
+      writer.spouses.map(&:name).should == ["3", "1", "2"]
+      writer.spouses.array.map(&:name).should == ["3", "1", "2"]
     end
 
   end
