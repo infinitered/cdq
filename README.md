@@ -3,7 +3,7 @@
 
 Core Data Query (CDQ) is a library to help you manage your Core Data stack
 while using RubyMotion.  It uses a data model file, which you can generate in
-XCode, or you can use [ruby-xcdm][https://github.com/infinitered/ruby-xcdm].
+XCode, or you can use [ruby-xcdm](https://github.com/infinitered/ruby-xcdm).
 CDQ aims to streamline the process of getting you up and running Core Data, while
 avoiding too much abstraction or method pollution on top of the SDK.  
 
