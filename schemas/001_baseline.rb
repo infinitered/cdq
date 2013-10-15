@@ -16,7 +16,7 @@ schema "0.0.1" do
   entity "Author" do
     string :name, optional: false
     float :fee
-    has_many :articles 
+    has_many :articles
   end
 
   entity "Writer" do
@@ -31,7 +31,7 @@ schema "0.0.1" do
     has_many :writers, inverse: "Writer.spouses"
   end
 
-  entity "Publisher", class_name: 'CDQManagedObject' do 
+  entity "Publisher", class_name: "CDQManagedObject" do
     string :name, optional: false
   end
 

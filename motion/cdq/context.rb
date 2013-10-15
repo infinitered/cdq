@@ -39,7 +39,7 @@ module CDQ
     end
 
     # The current context at the top of the stack.
-    # 
+    #
     def current
       stack.last
     end
@@ -144,7 +144,7 @@ module CDQ
       error = Pointer.new(:object)
       result = block.call(error)
       if error[0]
-        print_error(error)
+        print_error("Error while fetching", error[0])
         raise "Error while fetching: #{error[0].debugDescription}"
       end
       result || default
@@ -168,7 +168,7 @@ module CDQ
             puts indent + "#{key}: #{value}"
           end
         end
-      end 
+      end
     end
 
 end

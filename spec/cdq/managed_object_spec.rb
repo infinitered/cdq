@@ -53,7 +53,6 @@ module CDQ
     it "returns relationship sets which can behave like CDQRelationshipQuery objects" do
       eec = Author.create(name: 'eecummings')
       art = eec.articles.create(title: 'something here')
-      p art.class
       eec.articles.sort_by(:title).first.should == art
     end
 
@@ -72,10 +71,10 @@ module CDQ
         Writer.eecummings.array.should == [@eec]
         Writer.edgaralpoe.array.should == [@poe]
       end
-        
+
       it "also defines scopes on the cdq object" do
-        Writer.cdq.eecummings.array.should == [@eec]
-        Writer.cdq.edgaralpoe.array.should == [@poe]
+        cdq('Writer').eecummings.array.should == [@eec]
+        cdq('Writer').edgaralpoe.array.should == [@poe]
       end
     end
   end
