@@ -84,20 +84,30 @@ module CDQ
 
           } )
         elsif context.concurrencyType == NSPrivateQueueConcurrencyType
-          context.performBlock( -> {
+          task_id = UIApplication.sharedApplication.beginBackgroundTaskWithExpirationHandler( -> { NSLog "CDQ Save Timed Out" } )
 
-            # Let the application know we're doing something important
-            task_id = UIApplication.sharedApplication.beginBackgroundTaskWithExpirationHandler( -> { puts "oops" } )
+          if task_id == UIBackgroundTaskInvalid
+            context.performBlockAndWait( -> {
 
-            with_error_object do |error|
-              context.save(error)
-            end
+              with_error_object do |error|
+                context.save(error)
+              end
 
-            UIApplication.sharedApplication.endBackgroundTask(task_id)
+            } )
+          else
+            context.performBlock( -> {
 
-            NSNotificationCenter.defaultCenter.postNotificationName(BACKGROUND_SAVE_NOTIFICATION, object: context)
+              # Let the application know we're doing something important
+              with_error_object do |error|
+                context.save(error)
+              end
 
-          } )
+              UIApplication.sharedApplication.endBackgroundTask(task_id)
+
+              NSNotificationCenter.defaultCenter.postNotificationName(BACKGROUND_SAVE_NOTIFICATION, object: context)
+
+            } )
+          end
         else
           with_error_object do |error|
             context.save(error)
