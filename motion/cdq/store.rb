@@ -38,7 +38,7 @@ module CDQ
                                                      error:error)
       if store.nil?
         error[0].userInfo['metadata'] && error[0].userInfo['metadata'].each do |key, value|
-          puts "#{key}: #{value}"
+          NSLog "#{key}: #{value}"
         end
         raise error[0].userInfo['reason']
       end
