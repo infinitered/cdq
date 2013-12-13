@@ -4,33 +4,27 @@ module CDQ
   class CDQStoreManager
 
     def initialize(opts = {})
-      @name = opts[:name] || NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")
-      @database_path = database_path(@name)
+      @config = opts[:config] || CDQConfig.default
       @model = opts[:model]
-      @store_coordinator = create_store
+      @current = create_store
     end
 
     def current
-      @store_coordinator
+      @current
     end
 
     def reset!
-      NSFileManager.defaultManager.removeItemAtPath(@database_path, error: nil)
+      NSFileManager.defaultManager.removeItemAtURL(@config.database_url, error: nil)
     end
 
     private
-
-    def database_path(name)
-      dir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).last
-      path = File.join(dir, name + '.sqlite')
-    end
 
     def create_store
       coordinator = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(@model)
       error = Pointer.new(:object)
       options = { NSMigratePersistentStoresAutomaticallyOption => true,
                   NSInferMappingModelAutomaticallyOption => true }
-      url = NSURL.fileURLWithPath(@database_path)
+      url = @config.database_url
       store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
                                                      configuration:nil,
                                                      URL:url,
