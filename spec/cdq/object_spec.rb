@@ -4,15 +4,15 @@ module CDQ
   describe "CDQ Object" do
 
     before do
-      CDQ.cdq.setup
-
       class << self
         include CDQ
       end
+
+      cdq.setup
     end
 
     after do
-      CDQ.cdq.reset!
+      cdq.reset!
     end
 
     it "has a contexts method" do

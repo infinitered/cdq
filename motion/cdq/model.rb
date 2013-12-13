@@ -3,19 +3,19 @@ module CDQ
 
   class CDQModelManager
 
-    def initialize(opts = {})
-      @config = opts[:config] || CDQConfig.default
-      @current = load_model
-    end
+    attr_accessor :current
 
-    def current
-      @current
+    def initialize(config = nil)
+      @config = config || CDQConfig.default
+      @current = load_model
     end
 
     private
 
     def load_model
-      NSManagedObjectModel.alloc.initWithContentsOfURL(@config.model_url)
+      if @config.model_url
+        NSManagedObjectModel.alloc.initWithContentsOfURL(@config.model_url)
+      end
     end
 
   end

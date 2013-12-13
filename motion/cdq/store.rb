@@ -3,14 +3,15 @@ module CDQ
 
   class CDQStoreManager
 
+    attr_writer :current
+
     def initialize(opts = {})
       @config = opts[:config] || CDQConfig.default
       @model = opts[:model]
-      @current = create_store
     end
 
     def current
-      @current
+      @current ||= create_store
     end
 
     def reset!
@@ -20,6 +21,9 @@ module CDQ
     private
 
     def create_store
+      if @model.nil?
+        raise "No model found.  Can't create a persistent store coordinator without it."
+      end
       coordinator = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(@model)
       error = Pointer.new(:object)
       options = { NSMigratePersistentStoresAutomaticallyOption => true,

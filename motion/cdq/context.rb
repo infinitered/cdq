@@ -65,6 +65,9 @@ module CDQ
       if current
         context.parentContext = current
       else
+        if @store_coordinator.nil?
+          raise "Store coordinator not found. Cannot create the first context without one."
+        end
         context.persistentStoreCoordinator = @store_coordinator
       end
       push(context, &block)

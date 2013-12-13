@@ -21,6 +21,14 @@ module CDQ
       @context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSPrivateQueueConcurrencyType)
     end
 
+    it "should raise an exception if not given a store coordinator" do
+      cc = CDQContextManager.new(store_coordinator: nil)
+
+      should.raise(RuntimeError) do
+        cc.new(NSPrivateQueueConcurrencyType)
+      end
+    end
+
     it "can push a NSManagedObjectContext onto its stack" do
       @cc.push(@context)
       @cc.current.should == @context
