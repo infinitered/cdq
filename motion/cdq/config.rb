@@ -33,9 +33,6 @@ module CDQ
       @name = h['name'] || NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")
       @database_name = h['database_name'] || name
       @model_name = h['model_name'] || name
-    rescue => e
-      puts e.backtrace
-      raise
     end
 
     def database_url

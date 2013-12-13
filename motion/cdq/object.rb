@@ -6,7 +6,7 @@ module CDQ
     include CDQ
 
     def contexts
-      @@context_manager ||= CDQContextManager.new(store_coordinator: stores.current)
+      @@context_manager ||= CDQContextManager.new(store: stores.current)
     end
 
     def stores
@@ -25,6 +25,14 @@ module CDQ
     end
 
     def setup(opts = {})
+      if opts[:context]
+        contexts.push(opts[:context])
+        return true
+      elsif opts[:store]
+        stores.current = opts[:store]
+      elsif opts[:model]
+        models.current = opts[:model]
+      end
       contexts.new(NSMainQueueConcurrencyType)
       true
     end

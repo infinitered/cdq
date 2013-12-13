@@ -27,6 +27,32 @@ module CDQ
       cdq.models.class.should == CDQModelManager
     end
 
+    it "can override model" do
+      model = cdq.models.current
+
+      cdq.reset!
+
+      cdq.setup(model: model)
+      cdq.models.current.should == model
+    end
+
+    it "can override store" do
+      store = cdq.stores.current
+
+      cdq.reset!
+
+      cdq.setup(store: store)
+      cdq.stores.current.should == store
+    end
+
+    it "can override context" do
+      context = cdq.contexts.current
+
+      cdq.reset!
+
+      cdq.setup(context: context)
+      cdq.contexts.current.should == context
+    end
   end
 
 end

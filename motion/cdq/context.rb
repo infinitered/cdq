@@ -6,7 +6,7 @@ module CDQ
     BACKGROUND_SAVE_NOTIFICATION = 'com.infinitered.cdq.context.background_save_completed'
 
     def initialize(opts = {})
-      @store_coordinator = opts[:store_coordinator]
+      @store = opts[:store]
     end
 
     # Push a new context onto the stack for the current thread, making that context the
@@ -65,10 +65,10 @@ module CDQ
       if current
         context.parentContext = current
       else
-        if @store_coordinator.nil?
+        if @store.nil?
           raise "Store coordinator not found. Cannot create the first context without one."
         end
-        context.persistentStoreCoordinator = @store_coordinator
+        context.persistentStoreCoordinator = @store
       end
       push(context, &block)
     end

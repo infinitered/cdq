@@ -22,7 +22,13 @@ schema as it grows, if you can follow a few simple rules.
 
 ## Installing
 
-While CDQ is in alpha, use bundler to point at the git repo:
+Using Bundler:
+
+```ruby
+gem 'cdq'
+```
+
+If you want to see bleeding-edge changes, point Bundler at the git repo:
 
 ```ruby
 gem 'cdq', git: 'git://github.com/infinitered/cdq.git'
@@ -143,6 +149,22 @@ Author.prolific.a_authors.limit(5)
 Anything you can do with `cdq('Author')` you can now do with just `Author`.  If you have a
 pre-existing implementation class that you can't turn into a CDQManagedObject, you can also
 just wrap the class: `cdq(Author)`.  
+
+## Setting up your stack with an existing model
+
+If you have an existing app that already manages its own data model, you can
+use that, too, and override CDQ's stack at any layer:
+
+```ruby
+cdq.setup(context: App.delegate.mainContext) # don't set up model or store coordinator
+cdq.setup(store_coordinator: App.delegate.persistentStoreCoordinator) # Don't set up model
+cdq.setup(model: App.delegate.managedObjectModel) # Don't load model
+```
+
+You cannot use CDQManagedObject as a base class when overriding this way,
+you'll need to use <tt>cdq('Entity')</tt>.  If you have an existing model and
+want to use it with CDQManagedObject without changing its name, You'll need to
+use a <tt>cdq.yml</tt> config file.  See ['CDQObject'](motion/cdq/config.rb).
 
 ## Things that are currently missing
 
