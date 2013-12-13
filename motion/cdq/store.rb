@@ -7,7 +7,7 @@ module CDQ
 
     def initialize(opts = {})
       @config = opts[:config] || CDQConfig.default
-      @model = opts[:model]
+      @model_manager = opts[:model_manager]
     end
 
     def current
@@ -18,29 +18,34 @@ module CDQ
       NSFileManager.defaultManager.removeItemAtURL(@config.database_url, error: nil)
     end
 
+    def invalid?
+      !@current && @model_manager.invalid?
+    end
+
     private
 
     def create_store
-      if @model.nil?
+      if invalid?
         raise "No model found.  Can't create a persistent store coordinator without it."
-      end
-      coordinator = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(@model)
-      error = Pointer.new(:object)
-      options = { NSMigratePersistentStoresAutomaticallyOption => true,
-                  NSInferMappingModelAutomaticallyOption => true }
-      url = @config.database_url
-      store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
-                                                     configuration:nil,
-                                                     URL:url,
-                                                     options:options,
-                                                     error:error)
-      if store.nil?
-        error[0].userInfo['metadata'] && error[0].userInfo['metadata'].each do |key, value|
-          NSLog "#{key}: #{value}"
+      else
+        coordinator = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(@model_manager.current)
+        error = Pointer.new(:object)
+        options = { NSMigratePersistentStoresAutomaticallyOption => true,
+                    NSInferMappingModelAutomaticallyOption => true }
+        url = @config.database_url
+        store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
+                                                       configuration:nil,
+                                                       URL:url,
+                                                       options:options,
+                                                       error:error)
+        if store.nil?
+          error[0].userInfo['metadata'] && error[0].userInfo['metadata'].each do |key, value|
+            NSLog "#{key}: #{value}"
+          end
+          raise error[0].userInfo['reason']
         end
-        raise error[0].userInfo['reason']
+        coordinator
       end
-      coordinator
     end
   end
 

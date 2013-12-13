@@ -6,11 +6,11 @@ module CDQ
     include CDQ
 
     def contexts
-      @@context_manager ||= CDQContextManager.new(store: stores.current)
+      @@context_manager ||= CDQContextManager.new(store_manager: stores)
     end
 
     def stores
-      @@store_manager ||= CDQStoreManager.new(model: models.current)
+      @@store_manager ||= CDQStoreManager.new(model_manager: models)
     end
 
     def models

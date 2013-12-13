@@ -17,12 +17,17 @@ module CDQ
 
 
     before do
-      @cc = CDQContextManager.new(store: cdq.stores.current)
+      @cc = CDQContextManager.new(store_manager: cdq.stores)
       @context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSPrivateQueueConcurrencyType)
     end
 
     it "should raise an exception if not given a store coordinator" do
-      cc = CDQContextManager.new(store: nil)
+      c = CDQConfig.new(name: "foo")
+      mm = CDQModelManager.new(config: c)
+      sm = CDQStoreManager.new(config: c, model_manager: mm)
+
+      cc = CDQContextManager.new(store_manager: sm)
+
 
       should.raise(RuntimeError) do
         cc.new(NSPrivateQueueConcurrencyType)

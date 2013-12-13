@@ -5,7 +5,7 @@ module CDQ
 
     before do
       CDQ.cdq.setup
-      @sm = CDQStoreManager.new(model: CDQ.cdq.models.current)
+      @sm = CDQStoreManager.new(model_manager: CDQ.cdq.models)
     end
 
     after do
@@ -18,14 +18,17 @@ module CDQ
     end
 
     it "rejects attempt to create without a valid model" do
+      c = CDQConfig.new(name: "foo")
+      mm = CDQModelManager.new(config: c)
+      sm = CDQStoreManager.new(config: c, model_manager: mm)
       should.raise do
-        CDQStoreManager.new(model: nil).current
+        sm.current
       end
     end
 
     it "permits setting custom store manager" do
+      nsm = CDQStoreManager.new(model: nil)
       should.not.raise do
-        nsm = CDQStoreManager.new(model: nil)
         nsm.current = @sm.current
         nsm.current
       end

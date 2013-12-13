@@ -6,7 +6,7 @@ module CDQ
     BACKGROUND_SAVE_NOTIFICATION = 'com.infinitered.cdq.context.background_save_completed'
 
     def initialize(opts = {})
-      @store = opts[:store]
+      @store_manager = opts[:store_manager]
     end
 
     # Push a new context onto the stack for the current thread, making that context the
@@ -58,17 +58,18 @@ module CDQ
 
     # Create and push a new context with the specified concurrency type.  Its parent
     # will be set to the previous head context.  If a block is supplied, the new context
-    # will exist for the duration of the block and then the previous state will be restored.
+    # will exist for the duration of the block and then the previous state will be restore_managerd.
     #
     def new(concurrency_type, &block)
       context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
       if current
         context.parentContext = current
       else
-        if @store.nil?
-          raise "Store coordinator not found. Cannot create the first context without one."
+        if @store_manager.invalid?
+          raise "store coordinator not found. Cannot create the first context without one."
+        else
+          context.persistentStoreCoordinator = @store_manager.current
         end
-        context.persistentStoreCoordinator = @store
       end
       push(context, &block)
     end

@@ -150,14 +150,14 @@ Anything you can do with `cdq('Author')` you can now do with just `Author`.  If 
 pre-existing implementation class that you can't turn into a CDQManagedObject, you can also
 just wrap the class: `cdq(Author)`.  
 
-## Setting up your stack with an existing model
+## Using CDQ with a pre-existing model
 
 If you have an existing app that already manages its own data model, you can
 use that, too, and override CDQ's stack at any layer:
 
 ```ruby
 cdq.setup(context: App.delegate.mainContext) # don't set up model or store coordinator
-cdq.setup(store_coordinator: App.delegate.persistentStoreCoordinator) # Don't set up model
+cdq.setup(store: App.delegate.persistentStoreCoordinator) # Don't set up model
 cdq.setup(model: App.delegate.managedObjectModel) # Don't load model
 ```
 

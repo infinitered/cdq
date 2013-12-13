@@ -7,12 +7,19 @@ module CDQ
     before do
       @bundle_name = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")
     end
+
     it "sets default values when no config file present" do
-      #CDQConfig.default.config_file.should == @cf_file
       config = CDQConfig.new(nil)
       config.name.should == @bundle_name
       config.database_name.should == config.name
       config.model_name.should == config.name
+    end
+
+    it "can initialize values from a hash" do
+      config = CDQConfig.new(name: "foo")
+      config.name.should == "foo"
+      config.database_name.should == "foo"
+      config.model_name.should == "foo"
     end
 
     it "can override the default name" do

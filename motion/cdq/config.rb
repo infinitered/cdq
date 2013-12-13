@@ -24,15 +24,23 @@ module CDQ
     attr_reader :config_file, :database_name, :model_name, :name
 
     def initialize(config_file)
-      @config_file = config_file
-      if config_file && File.file?(config_file)
-        h = File.open(config_file) { |f| YAML.load(f.read) }
+      case config_file
+      when String
+        @config_file = config_file
+        if File.file?(config_file)
+          h = File.open(config_file) { |f| YAML.load(f.read) }
+        else
+          h = {}
+        end
+      when Hash
+        h = config_file
       else
         h = {}
       end
-      @name = h['name'] || NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")
-      @database_name = h['database_name'] || name
-      @model_name = h['model_name'] || name
+
+      @name = h['name'] || h[:name] || NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")
+      @database_name = h['database_name'] || h[:database_name] || name
+      @model_name = h['model_name'] || h[:model_name] || name
     end
 
     def database_url
