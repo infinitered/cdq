@@ -164,7 +164,7 @@ cdq.setup(model: App.delegate.managedObjectModel) # Don't load model
 You cannot use CDQManagedObject as a base class when overriding this way,
 you'll need to use <tt>cdq('Entity')</tt>.  If you have an existing model and
 want to use it with CDQManagedObject without changing its name, You'll need to
-use a <tt>cdq.yml</tt> config file.  See ['CDQObject'](motion/cdq/config.rb).
+use a <tt>cdq.yml</tt> config file.  See [CDQConfig](motion/cdq/config.rb).
 
 ## Things that are currently missing
 
