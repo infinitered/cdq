@@ -3,22 +3,22 @@ PATH
   specs:
     cdq (0.1.0)
       motion-yaml
-      ruby-xcdm (~> 0.0, >= 0.0.4)
+      ruby-xcdm (~> 0.0, >= 0.0.5)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (3.2.15)
+    activesupport (3.2.16)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     builder (3.2.2)
-    i18n (0.6.5)
+    i18n (0.6.9)
     motion-stump (0.3.0)
     motion-yaml (1.2)
     multi_json (1.8.2)
     plist (3.1.0)
     rake (10.1.0)
-    ruby-xcdm (0.0.4)
+    ruby-xcdm (0.0.5)
       activesupport (~> 3.2)
       builder (~> 3.2)
       plist (~> 3.1)
