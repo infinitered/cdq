@@ -20,7 +20,7 @@ module CDQ
     end
 
     # Creates a new managed object within the target relationship
-    # 
+    #
     def new(opts = {})
       super(opts).tap do |obj|
         add(obj)
@@ -28,7 +28,7 @@ module CDQ
     end
 
     # Add an existing object to the relationship
-    # 
+    #
     def add(obj)
       if @inverse_rel.isToMany
         obj.send(@inverse_rel.name).addObject(@owner)
@@ -56,7 +56,7 @@ module CDQ
         self
       end
 
-      # This works in a special way.  If we're extending a regular NSSet, it will 
+      # This works in a special way.  If we're extending a regular NSSet, it will
       # create a new method that calls allObjects.  If we're extending a NSOrderedSet,
       # the override will not work, and we get the array method already defined on
       # NSOrderedSet, which is actually exactly what we want.

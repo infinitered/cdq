@@ -2,7 +2,7 @@
 module CDQ
   describe "CDQ Partial Predicates" do
 
-    before do 
+    before do
       @scope = CDQQuery.new
       @ppred = CDQPartialPredicate.new(:count, @scope)
     end

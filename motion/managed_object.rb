@@ -9,7 +9,7 @@
 # Class.cdq.<em>method</em>.
 #
 # Examples:
-# 
+#
 #   MyEntity.where(:name).eq("John").limit(2)
 #   MyEntity.first
 #   MyEntity.create(name: "John")
@@ -42,13 +42,13 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
       cdq.models.current.entitiesByName[name]
     end
 
-    # Creates a CDQ scope, but also defines a method on the class that returns the 
+    # Creates a CDQ scope, but also defines a method on the class that returns the
     # query directly.
     #
     def scope(name, query = nil, &block)
       cdq.scope(name, query, &block)
       if query
-        self.class.send(:define_method, name) do 
+        self.class.send(:define_method, name) do
           query
         end
       else
@@ -62,7 +62,7 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
       cdq.new(*args)
     end
 
-    # Pass any unknown methods on to cdq. 
+    # Pass any unknown methods on to cdq.
     #
     def method_missing(name, *args, &block)
       cdq.send(name, *args, &block)

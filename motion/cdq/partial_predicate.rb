@@ -17,7 +17,7 @@ module CDQ
       :begins_with => [NSBeginsWithPredicateOperatorType],
       :ends_with => [NSEndsWithPredicateOperatorType]
     }
-      
+
     def initialize(key, scope, operation = :and)
       @key = key
       @scope = scope
@@ -25,14 +25,14 @@ module CDQ
     end
 
     OPERATORS.each do |op, (type, synonym)|
-      define_method(op) do |value, options = 0| 
+      define_method(op) do |value, options = 0|
         make_scope(type, value, options)
       end
       alias_method synonym, op if synonym
     end
 
     def between(min, max);   make_scope(NSBetweenPredicateOperatorType, [min, max]); end
-      
+
     private
 
     def make_pred(key, type, value, options = 0)

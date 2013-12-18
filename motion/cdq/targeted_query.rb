@@ -37,7 +37,7 @@ module CDQ #:nodoc:
       end
     end
 
-    # Return all matching entities.  
+    # Return all matching entities.
     #
     # Causes execution.
     #
@@ -58,7 +58,7 @@ module CDQ #:nodoc:
 
     # Return the first entity matching the query.
     #
-    # Causes execution.  
+    # Causes execution.
     #
     def first
       limit(1).array.first
@@ -68,7 +68,7 @@ module CDQ #:nodoc:
     # <tt>length</tt> parameter is supplied, fetch a range of length <tt>length</tt>
     # starting at <tt>index</tt>
     #
-    # Causes execution.  
+    # Causes execution.
     #
     def [](index, length = nil)
       if length
@@ -81,7 +81,7 @@ module CDQ #:nodoc:
     # Iterate over each entity matched by the query.  You can also use any method from the
     # Enumerable module in the standard library that does not depend on ordering.
     #
-    # Causes execution.  
+    # Causes execution.
     #
     def each(&block)
       array.each(&block)
@@ -96,7 +96,7 @@ module CDQ #:nodoc:
       end
     end
 
-    # Create a new entity in the current context.  Accepts a hash of attributes that will be assigned to 
+    # Create a new entity in the current context.  Accepts a hash of attributes that will be assigned to
     # the newly-created entity.  Does not save the context.
     #
     def new(opts = {})
@@ -105,7 +105,7 @@ module CDQ #:nodoc:
       end
     end
 
-    # Create a new entity in the current context.  Accepts a hash of attributes that will be assigned to 
+    # Create a new entity in the current context.  Accepts a hash of attributes that will be assigned to
     # the newly-created entity.  Does not save the context.
     #
     # [TODO: Will apply validation.]
@@ -117,7 +117,7 @@ module CDQ #:nodoc:
     # Create a named scope.  The query is any valid CDQ query.
     #
     # Example:
-    #   
+    #
     # cdq('Author').scope(:first_published, cdq(:published).eq(true).sort_by(:published_at).limit(1))
     #
     # cdq('Author').first_published.first => #<Author>
@@ -135,7 +135,7 @@ module CDQ #:nodoc:
     # Override the context in which to perform this query.  This forever forces the
     # specified context for this particular query, so if you save the it for later
     # use (such as defining a scope) bear in mind that changes in the default context
-    # will have no effect when running this. 
+    # will have no effect when running this.
     #
     def in_context(context)
       clone(context: context)

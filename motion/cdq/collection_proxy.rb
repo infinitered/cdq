@@ -19,7 +19,7 @@ module CDQ
     def array
       @objects
     end
-    
+
     def first
       @objects.first
     end

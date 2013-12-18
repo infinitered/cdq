@@ -26,7 +26,7 @@ module CDQ
     end
 
     it "passes through existing CDQObjects unchanged" do
-      query = CDQQuery.new 
+      query = CDQQuery.new
       cdq(query).should == query
     end
 

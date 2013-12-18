@@ -61,7 +61,7 @@ module CDQ
     def sort_by(key, dir = :ascending)
       if dir.to_s[0,4].downcase == 'desc'
         ascending = false
-      else 
+      else
         ascending = true
       end
 
