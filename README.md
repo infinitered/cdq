@@ -14,6 +14,10 @@ rewriting almost everything.  If you pay attention, you can still find the
 genetic traces, so thanks to @alloy for sharing his work and letting me learn
 so much.
 
+[![Dependency Status](https://gemnasium.com/infinitered/cdq.png)](https://gemnasium.com/infinitered/cdq)
+[![Build Status](https://travis-ci.org/infinitered/cdq.png?branch=master)](https://travis-ci.org/infinitered/cdq)
+[![Gem Version](https://badge.fury.io/rb/cdq.png)](http://badge.fury.io/rb/cdq)
+
 ### Why use a static Data Model?
 
 By using a real data model file that gets compiled and included in your bundle,
