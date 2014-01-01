@@ -22,7 +22,7 @@ so much.
 
 By using a real data model file that gets compiled and included in your bundle,
 you can take advantage of automatic migration, which simplifies managing your
-schema as it grows, if you can follow a few simple rules.  
+schema as it grows, if you can follow a few [simple rules](https://developer.apple.com/library/ios/documentation/cocoa/conceptual/CoreDataVersioning/Articles/vmLightweightMigration.html#//apple_ref/doc/uid/TP40004399-CH4-SW2).  
 
 ## Installing
 
