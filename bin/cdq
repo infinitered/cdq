@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require "erb"
+require "optparse"
+require "rubygems"
+require "cdq/cli"
+
+CDQ::CommandLine.run_all
+
