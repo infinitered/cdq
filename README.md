@@ -26,7 +26,18 @@ schema as it grows, if you can follow a few [simple rules](https://developer.app
 
 ## Installing
 
-Using Bundler:
+##### Quick Start:
+
+```bash
+$ gem install cdq
+$ motion create my_app # if needed
+$ cd my_app
+$ cdq init
+```
+
+This way assumes you want to use ruby-xcdm.  Run ```cdq -h``` for list of more generators.
+
+##### Using Bundler:
 
 ```ruby
 gem 'cdq'
@@ -55,10 +66,6 @@ class AppDelegate
     cdq.setup
     true
   end
-end
-
-class TopLevel
-  include CDQ
 end
 ```
 
