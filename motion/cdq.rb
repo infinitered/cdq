@@ -56,3 +56,7 @@ end
 class UIResponder
   include CDQ
 end
+
+class TopLevel
+  include CDQ
+end

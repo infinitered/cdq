@@ -65,6 +65,10 @@ Options:
     def option_parser
       super(HELP_TEXT).tap do |opts|
         opts.program_name = "cdq init"
+
+        opts.on("-d", "--dry-run", "Do a Dry Run") do
+          @dry_run = "dry_run"
+        end
       end
     end
 
@@ -73,7 +77,45 @@ Options:
       opts.order!
 
       unless singleton_options_passed
-        puts "Initialized"
+        CDQ::Generator.new(@dry_run).create('init')
+
+        print "  \u0394  Checking bundle for cdq... "
+        unless system('bundle show cdq')
+          print "  \u0394  Adding cdq to Gemfile... "
+          File.open("Gemfile", "at") do |gemfile|
+            gemfile.puts("gem 'cdq'")
+          end
+          puts "Done."
+        end
+
+        # print "  \u0394  Checking bundle for ruby-xcdm... "
+        # unless system('bundle show ruby-xcdm')
+        #   print "  \u0394  Adding ruby-xcdm to Gemfile... "
+        #   File.open("Gemfile", "at") do |gemfile|
+        #     gemfile.puts("gem 'ruby-xcdm'")
+        #   end
+        #   puts "Done."
+        # end
+
+        print "  \u0394  Adding schema:build hook to Rakefile... "
+        File.open("Rakefile", "at") do |rakefile|
+          rakefile.puts('task :"build:simulator" => :"schema:build"')
+        end
+        puts "Done."
+
+        puts %{
+Now open app/app_delegate.rb, and add
+
+include CDQ
+
+at class level, and
+
+cdq.setup
+
+wherever you want the stack to get set up, probably right before you set
+your root controller.
+        }
+
       end
     end
 

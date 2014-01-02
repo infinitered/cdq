@@ -6,7 +6,7 @@ module CDQ
       @dry_run = true if options == 'dry_run'
     end
 
-    def create(template, name)
+    def create(template, name = nil)
       insert_from_template(template, name)
     end
 
@@ -28,21 +28,23 @@ module CDQ
       end
     end
 
-    def insert_from_template(template_name, name)
+    def insert_from_template(template_name, name = nil)
       puts "\n     Creating #{template_name}: #{name}\n\n"
 
       return unless (@template_path = template_path(template_name))
       files = Dir["#{@template_path}**/*"].select {|f| !File.directory? f}
 
-      @name = name
-      @name_camel_case = @name.split('_').map{|word| word.capitalize}.join
+      if name
+        @name = name
+        @name_camel_case = @name.split('_').map{|word| word.capitalize}.join
+      end
 
       files.each do |template_file_path_and_name|
         @in_app_path = File.dirname(template_file_path_and_name).gsub(@template_path, '')
         @ext = File.extname(template_file_path_and_name)
         @file_name = File.basename(template_file_path_and_name, @ext)
 
-        @new_file_name = @file_name.gsub('name', @name)
+        @new_file_name = @file_name.gsub('name', @name || 'name')
         @new_file_path_name = "#{Dir.pwd}/#{@in_app_path}/#{@new_file_name}#{@ext}"
 
         if @dry_run

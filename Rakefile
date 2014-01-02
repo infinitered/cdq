@@ -22,3 +22,7 @@ require 'ruby-xcdm'
 require 'motion-yaml'
 
 task :"build:simulator" => :"schema:build"
+task :"build:simulator" => :"schema:build"
+task :"build:simulator" => :"schema:build"
+task :"build:simulator" => :"schema:build"
+task :"build:simulator" => :"schema:build"
