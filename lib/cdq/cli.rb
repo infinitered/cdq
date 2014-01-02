@@ -106,14 +106,15 @@ Options:
         puts %{
 Now open app/app_delegate.rb, and add
 
-include CDQ
+  include CDQ
 
 at class level, and
 
-cdq.setup
+  cdq.setup
 
 wherever you want the stack to get set up, probably right before you set
-your root controller.
+your root controller.  Edit your inital schema, create a few models, and
+you're off and running.
         }
 
       end

@@ -14,5 +14,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.add_runtime_dependency 'ruby-xcdm', '~> 0.0', '>= 0.0.5'
   gem.add_runtime_dependency 'motion-yaml'
+  gem.executables << 'cdq'
+
   gem.version       = CDQ::VERSION
 end
