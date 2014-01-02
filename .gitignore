@@ -9,3 +9,4 @@ resources/*.storyboardc
 examples/**/*.nib
 tags
 .rbenv-version
+pkg
