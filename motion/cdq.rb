@@ -48,16 +48,15 @@ module CDQ
     end
   end
 
-  def self.pollute(klass)
-  end
-
 end
 
 
-class UIResponder #:nodoc: all
+# @private
+class UIResponder
   include CDQ
 end
 
-class TopLevel #:nodoc: all
+# @private
+class TopLevel
   include CDQ
 end

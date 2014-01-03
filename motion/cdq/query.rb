@@ -1,7 +1,16 @@
 
 module CDQ
+
+  #
+  # CDQ Queries are the primary way of describing a set of objects.
+  #
   class CDQQuery < CDQObject
 
+    # @private
+    #
+    # This is a singleton object needed to represent "empty" in limit and
+    # offset, because they need to be able to accept nil as a real value.
+    #
     EMPTY = Object.new
 
     attr_reader :predicate, :sort_descriptors
@@ -14,6 +23,10 @@ module CDQ
       @saved_key = opts[:saved_key]
     end
 
+    # Return or set the fetch limit.  If passed an argument, return a new
+    # query with the specified limit value.  Otherwise, return the current
+    # value.
+    #
     def limit(value = EMPTY)
       if value == EMPTY
         @limit
@@ -22,6 +35,10 @@ module CDQ
       end
     end
 
+    # Return or set the fetch offset.  If passed an argument, return a new
+    # query with the specified offset value.  Otherwise, return the current
+    # value.
+    #
     def offset(value = EMPTY)
       if value == EMPTY
         @offset
@@ -30,7 +47,36 @@ module CDQ
       end
     end
 
-    # Combine this query with others in an intersection ("and") relationship
+    # Combine this query with others in an intersection ("and") relationship. Can be
+    # used to begin a new query as well, especially when called in its <tt>where</tt>
+    # variant.
+    #
+    # The query passed in can be a wide variety of types:
+    #
+    # Symbol: This is by far the most common, and it is also a special
+    # case -- the return value when passing a symbol is a CDQPartialPredicate,
+    # rather than CDQQuery. Methods on CDQPartialPredicate are then comparison
+    # operators against the attribute indicated by the symbol itself, which take
+    # a value operand.  For example:
+    #
+    #   query.where(:name).equal("Chuck").and(:title).not_equal("Manager")
+    #
+    # @see CDQPartialPredicate
+    #
+    # String: Interpreted as an NSPredicate format string.  Additional arguments are
+    # the positional parameters.
+    #
+    # NilClass: If the argument is nil (most likely because it was omitted), and there
+    # was a previous use of a symbol, then reuse that last symbol. For example:
+    #
+    #   query.where(:name).contains("Chuck").and.contains("Norris")
+    #
+    # CDQQuery: If you have another CDQQuery from somewhere else, you can pass it in directly.
+    #
+    # NSPredicate: You can pass in a raw NSPredicate and it will work as you'd expect.
+    #
+    # Hash: Each key/value pair is treated as equality and anded together.
+    #
     def and(query = nil, *args)
       merge_query(query, :and, *args) do |left, right|
         NSCompoundPredicate.andPredicateWithSubpredicates([left, right])
@@ -38,12 +84,41 @@ module CDQ
     end
     alias_method :where, :and
 
-    # Combine this query with others in a union ("or") relationship
+    # Combine this query with others in a union ("or") relationship.  Accepts
+    # all the same argument types as <tt>and</tt>.
     def or(query = nil, *args)
       merge_query(query, :or, *args) do |left, right|
         NSCompoundPredicate.orPredicateWithSubpredicates([left, right])
       end
     end
+
+    # Add a new sort key.  Multiple invocations add additional sort keys rather than replacing
+    # old ones.
+    #
+    #   @param key The attribute to sort on
+    #   @param dir The sort direction (default = :ascending)
+    #
+    def sort_by(key, dir = :ascending)
+      if dir.to_s[0,4].downcase == 'desc'
+        ascending = false
+      else
+        ascending = true
+      end
+
+      clone(sort_descriptors: @sort_descriptors + [NSSortDescriptor.sortDescriptorWithKey(key, ascending: ascending)])
+    end
+
+    # Return an NSFetchRequest that will implement this query
+    def fetch_request
+      NSFetchRequest.new.tap do |req|
+        req.predicate = predicate
+        req.fetchLimit = limit if limit
+        req.fetchOffset = offset if offset
+        req.sortDescriptors = sort_descriptors unless sort_descriptors.empty?
+      end
+    end
+
+    private
 
     # Create a new query with the same values as this one, optionally overriding
     # any of them in the options
@@ -57,27 +132,6 @@ module CDQ
         limit: limit,
         offset: offset }
     end
-
-    def sort_by(key, dir = :ascending)
-      if dir.to_s[0,4].downcase == 'desc'
-        ascending = false
-      else
-        ascending = true
-      end
-
-      clone(sort_descriptors: @sort_descriptors + [NSSortDescriptor.sortDescriptorWithKey(key, ascending: ascending)])
-    end
-
-    def fetch_request
-      NSFetchRequest.new.tap do |req|
-        req.predicate = predicate
-        req.fetchLimit = limit if limit
-        req.fetchOffset = offset if offset
-        req.sortDescriptors = sort_descriptors unless sort_descriptors.empty?
-      end
-    end
-
-    private
 
     def merge_query(query, operation, *args, &block)
       key_to_save = nil

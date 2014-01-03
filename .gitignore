@@ -10,3 +10,4 @@ examples/**/*.nib
 tags
 .rbenv-version
 pkg
+.yardoc

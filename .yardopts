@@ -1,1 +1,1 @@
-motion/**/*.rb
+--no-private motion/**/*.rb
