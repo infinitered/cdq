@@ -53,10 +53,11 @@ module CDQ
 
 end
 
-class UIResponder
+
+class UIResponder #:nodoc: all
   include CDQ
 end
 
-class TopLevel
+class TopLevel #:nodoc: all
   include CDQ
 end

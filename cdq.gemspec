@@ -5,10 +5,17 @@ Gem::Specification.new do |gem|
   gem.authors       = ["infinitered", "kemiller"]
   gem.email         = ["ken@infinitered.com"]
   gem.description   = "Core Data Query for RubyMotion"
-  gem.summary       = "Core Data Query for RubyMotion"
-  gem.homepage      = "http://github.com/infinitered/cdq"
+  gem.summary       = "A streamlined library for working with Core Data outside XCode"
+  gem.homepage      = "http://infinitered.com/cdq"
+  gem.license       = 'MIT'
 
-  gem.files         = `git ls-files`.split($\)
+  files = []
+  files << 'README.md'
+  files << 'LICENSE'
+  files.concat(Dir.glob('lib/**/*.rb'))
+  files.concat(Dir.glob('motion/**/*.rb'))
+  files.concat(Dir.glob('templates/**/*.rb'))
+  gem.files = files
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "cdq"
   gem.require_paths = ["lib"]
