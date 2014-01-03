@@ -108,8 +108,6 @@ module CDQ #:nodoc:
     # Create a new entity in the current context.  Accepts a hash of attributes that will be assigned to
     # the newly-created entity.  Does not save the context.
     #
-    # [TODO: Will apply validation.]
-    #
     def create(*args)
       new(*args)
     end

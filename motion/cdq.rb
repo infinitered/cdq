@@ -8,6 +8,26 @@ module CDQ
 
   extend self
 
+  # The master method that will lift a variety of arguments into the CDQ
+  # ecosystem.  What it returns depends on the type of the argument passed:
+  #
+  # Class: Finds an entity with the same name as the class and returns a
+  # targeted query.
+  #
+  # String: Finds an entity with the name provided in the string and returns a
+  # targeted query.
+  #
+  # Symbol: Returns an untargeted partial predicate.  This is useful for nested
+  # queries, and for defining scopes.
+  #
+  # CDQObject: returns the object itself (no-op).
+  #
+  # NSManagedObject: wraps the object in a CDQObjectProxy, which permits
+  # cdq-style queries on the object's relationships.
+  #
+  # Array: wraps the array in a CDQCollectionProxy, which lets you run queries
+  # relative to the members of the collection.
+  #
   def cdq(obj = nil)
     obj ||= self
 
