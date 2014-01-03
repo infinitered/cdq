@@ -12,21 +12,36 @@ module CDQ
   # ecosystem.  What it returns depends on the type of the argument passed:
   #
   # Class: Finds an entity with the same name as the class and returns a
-  # targeted query.
+  # targeted query.  (This is also used internally for dedicated models.)
+  #
+  #   cdq(Author).where(:attribute).eq(1).limit(3)
   #
   # String: Finds an entity with the name provided in the string and returns a
   # targeted query.
   #
+  #   cdq('Author').where(:attribute).eq(1).limit(3)
+  #
   # Symbol: Returns an untargeted partial predicate.  This is useful for nested
   # queries, and for defining scopes.
+  #
+  #   Author.scope :singletons, cdq(:attribute).eq(1)
+  #   Author.where( cdq(:attribute).eq(1).or.eq(3) ).and(:name).ne("Roger")
   #
   # CDQObject: returns the object itself (no-op).
   #
   # NSManagedObject: wraps the object in a CDQObjectProxy, which permits
   # cdq-style queries on the object's relationships.
   #
+  #   emily_dickinson = Author.first
+  #   cdq(emily_dickinson).articles.where(:page_count).lt(5).array
+  #
   # Array: wraps the array in a CDQCollectionProxy, which lets you run queries
   # relative to the members of the collection.
+  #
+  #   emily_dickinson = Author.first
+  #   edgar_allen_poe = Author.all[4]
+  #   charles_dickens = Author.all[7]
+  #   cdq([emily_dickinson, edgar_allen_poe, charles_dickens]).where(:avg_rating).eq(1)
   #
   def cdq(obj = nil)
     obj ||= self
