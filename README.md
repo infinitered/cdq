@@ -30,11 +30,11 @@ schema as it grows, if you can follow a few [simple rules](https://developer.app
 
 ## Installing
 
-##### Quick Start:
+### Quick Start:
 
 For brand-new apps, or just to try it out, go follow the instructions [here](https://github.com/infinitered/cdq/wiki/Greenfield-Quick-Start).
 
-##### Even Quicker Start:
+### Even Quicker Start:
 
 ```bash
 $ gem install cdq
@@ -45,7 +45,7 @@ $ cdq init
 
 This way assumes you want to use ruby-xcdm.  Run ```cdq -h``` for list of more generators.
 
-##### Using Bundler:
+### Using Bundler:
 
 ```ruby
 gem 'cdq'
@@ -157,7 +157,7 @@ all the data over to your main context all at once.  CDQ makes that easy too:
 
 ## Object Lifecycle
 
-#### Creating
+### Creating
 ```ruby
   Author.create(name: "Le Guin", publish_count: 150, first_published: 1970)
   Author.create(name: "Shakespeare", publish_count: 400, first_published: 1550)
@@ -165,14 +165,14 @@ all the data over to your main context all at once.  CDQ makes that easy too:
   cdq.save
 ```
 
-#### Updating
+### Updating
 ```ruby
   author = Author.first
   author.name = "Ursula K. Le Guin"
   cdq.save
 ```
 
-#### Deleting
+### Deleting
 ```ruby
   author = Author.first
   author.destroy
@@ -199,7 +199,7 @@ Here are some examples.  See the [cheat
 sheet](https://github.com/infinitered/cdq/wiki/CDQ-Cheat-Sheet) for a complete
 list.
 
-#### Conditions
+### Conditions
 
 ```ruby
   Author.where(:name).eq('Shakespeare') 
@@ -208,14 +208,14 @@ list.
   Author.where("name LIKE '%@'", '%kesp%')
 ```
 
-#### Sorts, Limits and Offsets
+### Sorts, Limits and Offsets
 
 ```ruby
   Author.sort_by(:created_at).limit(1).offset(10)
   Author.sort_by(:created_at, :descending)
 ```
 
-#### Conjunctions
+### Conjunctions
 
 ```ruby
   Author.where(:name).eq('Blake').and(:first_published).le(Time.local(1700))
@@ -224,13 +224,13 @@ list.
   Author.where(:created_at).ge(yesterday).and.lt(today)
 ```
 
-##### Nested Conjunctions
+#### Nested Conjunctions
 
 ```ruby
   Author.where(:name).contains("Emily").and(cdq(:pub_count).gt(100).or.lt(10))
 ```
 
-#### Fetching
+### Fetching
 
 Like ActiveRecord, CDQ will not run a fetch until you actually request specific 
 objects.  There are several methods for getting at the data:
