@@ -4,10 +4,10 @@
 Core Data Query (CDQ) is a library to help you manage your Core Data stack
 while using RubyMotion.  It uses a data model file, which you can generate in
 XCode, or you can use [ruby-xcdm](https://github.com/infinitered/ruby-xcdm).
-CDQ aims to streamline the process of getting you up and running Core Data, while
-avoiding too much abstraction or method pollution on top of the SDK.  While it 
-borrows many ideas from ActiveRecord (especially AREL), it is designed to 
-harmonize with Core Data's ways of doing things first.  
+
+[![Dependency Status](https://gemnasium.com/infinitered/cdq.png)](https://gemnasium.com/infinitered/cdq)
+[![Build Status](https://travis-ci.org/infinitered/cdq.png?branch=master)](https://travis-ci.org/infinitered/cdq)
+[![Gem Version](https://badge.fury.io/rb/cdq.png)](http://badge.fury.io/rb/cdq)
 
 ## Introduction
 
@@ -18,9 +18,10 @@ rewriting almost everything.  If you pay attention, you can still find the
 genetic traces, so thanks to @alloy for sharing his work and letting me learn
 so much.
 
-[![Dependency Status](https://gemnasium.com/infinitered/cdq.png)](https://gemnasium.com/infinitered/cdq)
-[![Build Status](https://travis-ci.org/infinitered/cdq.png?branch=master)](https://travis-ci.org/infinitered/cdq)
-[![Gem Version](https://badge.fury.io/rb/cdq.png)](http://badge.fury.io/rb/cdq)
+CDQ aims to streamline the process of getting you up and running Core Data, while
+avoiding too much abstraction or method pollution on top of the SDK.  While it 
+borrows many ideas from ActiveRecord (especially AREL), it is designed to 
+harmonize with Core Data's ways of doing things first.  
 
 ### Why use a static Data Model?
 
@@ -311,6 +312,12 @@ defining and using named scopes:
 > NOTE: strings and symbols are NOT interchangeable. `cdq('Entity')` gives you a
 query generator for an entity, but `cdq(:attribute)` starts a predicate for an
 attribute.
+
+## Documentation
+
+* [API](http://rubydoc.info/github/infinitered/cdq)
+* [Cheat Sheet](https://github.com/infinitered/cdq/wiki/CDQ-Cheat-Sheet)
+* [Tutorial](https://github.com/infinitered/cdq/wiki/Greenfield-Quick-Start)
 
 ## Things that are currently missing
 
