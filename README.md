@@ -9,6 +9,8 @@ avoiding too much abstraction or method pollution on top of the SDK.  While it
 borrows many ideas from ActiveRecord (especially AREL), it is designed to 
 harmonize with Core Data's ways of doing things first.  
 
+## Introduction
+
 CDQ began its life as a fork of
 [MotionData](https://github.com/alloy/MotionData), but it became obvious I
 wanted to take things in a different direction, so I cut loose and ended up
