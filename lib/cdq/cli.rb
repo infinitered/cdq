@@ -103,19 +103,7 @@ Options:
         end
         puts "Done."
 
-        puts %{
-Now open app/app_delegate.rb, and add
-
-  include CDQ
-
-at class level, and
-
-  cdq.setup
-
-wherever you want the stack to get set up, probably right before you set
-your root controller.  Edit your inital schema, create a few models, and
-you're off and running.
-        }
+        puts %{\n  Now edit schemas/0001_initial.rb to define your schema, and you're off and running.  }
 
       end
     end

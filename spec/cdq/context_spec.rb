@@ -47,7 +47,14 @@ module CDQ
       @cc.all.should == []
     end
 
+    it "sets a default context if used for the first time" do
+      @cc.current.should != nil
+    end
+
     it "pushes temporarily if passed a block" do
+      @cc.new(NSMainQueueConcurrencyType)
+      @cc.pop
+      @cc.current.should == nil
       @cc.push(@context) do
         @cc.current.should == @context
       end

@@ -14,6 +14,7 @@ module CDQ
     # return to the previous state.
     #
     def push(context, &block)
+      @has_been_set_up = true
       if block_given?
         save_stack do
           push_to_stack(context)
@@ -41,6 +42,9 @@ module CDQ
     # The current context at the top of the stack.
     #
     def current
+      if stack.empty? && !@has_been_set_up
+        new(NSMainQueueConcurrencyType)
+      end
       stack.last
     end
 
@@ -61,6 +65,7 @@ module CDQ
     # will exist for the duration of the block and then the previous state will be restore_managerd.
     #
     def new(concurrency_type, &block)
+      @has_been_set_up = true
       context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
       if current
         context.parentContext = current
