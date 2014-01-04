@@ -5,7 +5,9 @@ Core Data Query (CDQ) is a library to help you manage your Core Data stack
 while using RubyMotion.  It uses a data model file, which you can generate in
 XCode, or you can use [ruby-xcdm](https://github.com/infinitered/ruby-xcdm).
 CDQ aims to streamline the process of getting you up and running Core Data, while
-avoiding too much abstraction or method pollution on top of the SDK.  
+avoiding too much abstraction or method pollution on top of the SDK.  While it 
+borrows many ideas from ActiveRecord (especially AREL), it is designed to 
+harmonize with Core Data's ways of doing things first.  
 
 CDQ began its life as a fork of
 [MotionData](https://github.com/alloy/MotionData), but it became obvious I
@@ -27,6 +29,10 @@ schema as it grows, if you can follow a few [simple rules](https://developer.app
 ## Installing
 
 ##### Quick Start:
+
+For brand-new apps, or just to try it out, go follow the instructions [here](https://github.com/infinitered/cdq/wiki/Greenfield-Quick-Start).
+
+##### Even Quicker Start:
 
 ```bash
 $ gem install cdq
@@ -56,7 +62,7 @@ it to your resources file and make sure it's named the same as your RubyMotion
 project.  If you're using `ruby-xcdm` (which I highly recommend) then it will
 create the datamodel file automatically and put it in the right place.  
 
-Now include the setup code in your `app_delegate.rb` file:
+Now include the setup code in your ```app_delegate.rb``` file:
 
 ```ruby
 class AppDelegate
@@ -73,19 +79,102 @@ That's it!  You can create specific implementation classes for your entities if
 you want, but it's not required.  You can start running queries on the console or
 in your code right away.  
 
-## Creating new objects
+## Schema
 
-CDQ maintains a stack of NSManagedObjectContexts for you, and any create
-operations will insert new, unsaved objects into the context currently on top
-of the stack.  `cdq.save` will save the whole stack, including correctly using
-private threads if appropriate.
+The best way to use CDQ is together with ruby-xcdm, which is installed as a 
+dependency.  For the full docs, see its [github page](http://github.com/infinitered/ruby-xcdm),
+but here's a taste.  Schema files are found in the "schemas" directory within your 
+app root, and they are versioned for automatic migrations, and this is what they look like:
 
 ```ruby
-cdq('Author').create(name: "Le Guin", publish_count: 150, first_published: 1970)
-cdq('Author').create(name: "Shakespeare", publish_count: 400, first_published: 1550)
-cdq('Author').create(name: "Blake", publish_count: 100, first_published: 1778)
-cdq.save
+  schema "0001 initial" do
 
+    entity "Article" do
+
+      string    :body,        optional: false
+      integer32 :length
+      boolean   :published,   default: false
+      datetime  :publishedAt, default: false
+      string    :title,       optional: false
+
+      belongs_to :author
+    end
+
+    entity "Author" do
+      float :fee
+      string :name, optional: false
+      has_many :articles 
+    end
+
+  end
+```
+
+Ruby-xcdm translates these files straight into the XML format that Xcode uses for datamodels.
+
+## Context Management
+
+Managing NSManagedObjectContext objects in Core Data can be tricky, especially
+if you are trying to take advantage of nested contexts for better threading
+behavior.  One of the best parts of CDQ is that it handles contexts for you
+relatively seamlessly.  If you have a simple app, you may never need to worry
+about contexts at all.  
+
+### Nested Contexts
+
+For a great discussion of why you might want to use nested contexts, see [here](http://www.cocoanetics.com/2012/07/multi-context-coredata/).  
+
+CDQ maintains a stack of contexts (one stack per thread), and by default, all
+operations on objects use the topmost context.  You just call ```cdq.save```
+and it saves the whole stack.  Or you can get a list of all the contexts in
+order with ```cdq.contexts.all``` and do more precise work.   
+
+Settings things up the way you want is easy.  Here's how you'd set it up for asynchronous
+saves:
+
+```ruby
+  cdq.contexts.new(NSPrivateQueueConcurrencyType)
+  cdq.contexts.new(NSMainQueueConcurrencyType)
+```
+
+This pushes a private queue context onto the bottom of the stack, then a main queue context on top of it.  
+Since the main queue is on top, all your data operations will use that.  ```cdq.save``` then saves the
+main context, and schedules a save on the root context.
+
+### Temporary Contexts
+
+From time to time, you may need to use a temporary context.  For example, on
+importing a large amount of data from the network, it's best to process and
+load into a temporary context (possibly in a background thread) and then move
+all the data over to your main context all at once.  CDQ makes that easy too:
+
+```ruby
+  cdq.contexts.new(NSConfinementConcurrencyType) do
+    # Your work here
+  end
+```
+
+## Object Lifecycle
+
+#### Creating
+```ruby
+  Author.create(name: "Le Guin", publish_count: 150, first_published: 1970)
+  Author.create(name: "Shakespeare", publish_count: 400, first_published: 1550)
+  Author.create(name: "Blake", publish_count: 100, first_published: 1778)
+  cdq.save
+```
+
+#### Updating
+```ruby
+  author = Author.first
+  author.name = "Ursula K. Le Guin"
+  cdq.save
+```
+
+#### Deleting
+```ruby
+  author = Author.first
+  author.destroy
+  cdq.save
 ```
 
 ## Queries
@@ -100,21 +189,66 @@ running queries that only return a single object, consider rearchitecting.
 That said, queries are sometimes the only solution, and it's very handy to be
 able to use them easily when debugging from the console, or in unit tests.
 
-With that out of the way, here are some samples:
+All of these queries are infinitely daisy-chainable, and almost everything is
+possible to do using only chained methods, no need to drop into NSPredicate format
+strings unless you want to.  
+
+Here are some examples.  See the [cheat
+sheet](https://github.com/infinitered/cdq/wiki/CDQ-Cheat-Sheet) for a complete
+list.
+
+#### Conditions
 
 ```ruby
-# Simple Queries
-cdq('Author').where(:name).eq('Shakespeare') 
-cdq('Author').where(:publish_count).gt(10)
+  Author.where(:name).eq('Shakespeare') 
+  Author.where(:publish_count).gt(10)
+  Author.where(name: 'Shakespeare', publish_count: 15)
+  Author.where("name LIKE '%@'", '%kesp%')
+```
 
-# sort, limit, and offset
-cdq('Author').sort_by(:created_at).limit(1).offset(10)
+#### Sorts, Limits and Offsets
 
-# Compound queries
-cdq('Author').where(:name).eq('Blake').and(:first_published).le(Time.local(1700))
+```ruby
+  Author.sort_by(:created_at).limit(1).offset(10)
+  Author.sort_by(:created_at, :descending)
+```
 
-# Multiple comparisons against the same attribute
-cdq('Author').where(:created_at).ge(yesterday).and.lt(today)
+#### Conjunctions
+
+```ruby
+  Author.where(:name).eq('Blake').and(:first_published).le(Time.local(1700))
+
+  # Multiple comparisons against the same attribute
+  Author.where(:created_at).ge(yesterday).and.lt(today)
+```
+
+##### Nested Conjunctions
+
+```ruby
+  Author.where(:name).contains("Emily").and(cdq(:pub_count).gt(100).or.lt(10))
+```
+
+#### Fetching
+
+Like ActiveRecord, CDQ will not run a fetch until you actually request specific 
+objects.  There are several methods for getting at the data:
+
+ * ```array```
+ * ```first```
+ * ```each```
+ * ```[]```
+ * ```map```
+ * Anything else in ```Enumerable```
+
+## Dedicated Models
+
+If you're using CDQ in a brand new project, you'll probably want to use
+dedicated model classes for your entities.  
+familiar-looking and natural syntax for queries and scopes:
+
+```ruby
+  class Author < CDQManagedOjbect
+  end
 ```
 
 ## Named Scopes
@@ -123,48 +257,18 @@ You can save up partially-constructed queries for later use using named scopes, 
 combining them seamlessly with other queries or other named scopes:
 
 ```ruby
-cdq('Author').scope :a_authors, cdq(:name).begins_with('A')
-cdq('Author').scope :prolific, cdq(:publish_count).gt(99)
+  class Author < CDQManagedOjbect
+    scope :a_authors, where(:name).begins_with('A')
+    scope :prolific, where(:publish_count).gt(99)
+  end
 
-cdq('Author').prolific.a_authors.limit(5)
+  Author.prolific.a_authors.limit(5)
 ```
-
-> NOTE: strings and symbols are NOT interchangeable. `cdq('Entity')` gives you a
-query generator for an entity, but `cdq(:attribute)` starts a predicate for an
-attribute.
-
-## Dedicated Models
-
-If you're using CDQ in a brand new project, you'll probably want to use
-dedicated model classes for your entities.  It will enable the usual
-class-level customization of your model objects, and also a somewhat more
-familiar-looking and natural syntax for queries and scopes:
-
-```ruby
-class Author < CDQManagedOjbect
-  scope :a_authors, cdq(:name).begins_with('A')
-  scope :prolific, cdq(:publish_count).gt(99)
-end
-```
-
-Now you can change the queries above to:
-
-```ruby
-Author.where(:name).eq('Shakespeare') 
-Author.where(:publish_count).gt(10)
-Author.where(:name).eq('Blake').and(:first_published).le(Time.local(1700))
-Author.where(:created_at).ge(yesterday).and.lt(today)
-Author.prolific.a_authors.limit(5)
-```
-
-Anything you can do with `cdq('Author')` you can now do with just `Author`.  If you have a
-pre-existing implementation class that you can't turn into a CDQManagedObject, you can also
-just wrap the class: `cdq(Author)`.  
 
 ## Using CDQ with a pre-existing model
 
 If you have an existing app that already manages its own data model, you can
-use that, too, and override CDQ's stack at any layer:
+still use CDQ, overriding its stack at any layer:
 
 ```ruby
 cdq.setup(context: App.delegate.mainContext) # don't set up model or store coordinator
@@ -173,12 +277,42 @@ cdq.setup(model: App.delegate.managedObjectModel) # Don't load model
 ```
 
 You cannot use CDQManagedObject as a base class when overriding this way,
-you'll need to use <tt>cdq('Entity')</tt>.  If you have an existing model and
-want to use it with CDQManagedObject without changing its name, You'll need to
-use a <tt>cdq.yml</tt> config file.  See [CDQConfig](motion/cdq/config.rb).
+you'll need to use the master method, described below.  If you have an
+existing model and want to use it with CDQManagedObject without changing its
+name, You'll need to use a <tt>cdq.yml</tt> config file.  See
+[CDQConfig](http://github.com/infinitered/cdq/tree/master/motion/cdq/config.rb).
+
+### Working without model classes using the master method
+
+If you need or want to work without using CDQManagedObject as your base class,
+you can use the ```cdq()``` master method.  This is a "magic" method, like
+```rmq()``` in [RubyMotionQuery](http://github.com/infinitered/rmq) or
+```$()``` in jQuery, which will lift whatever you pass into it into the CDQ
+universe. The method is available inside all UIResponder classes (so, views and
+controllers) as well as in the console.  You can use it anywhere else by
+including the model ```CDQ``` into your classes.  To use an entity without a
+model class, just pass its name as a string into the master method, like so
+
+```ruby
+  cdq('Author').where(:name).eq('Shakespeare') 
+  cdq('Author').where(:publish_count).gt(10)
+  cdq('Author').sort_by(:created_at).limit(1).offset(10)
+```
+
+Anything you can do with a model, you can also do with the master method, including
+defining and using named scopes:
+
+```ruby
+  cdq('Author').scope :a_authors, cdq(:name).begins_with('A')
+  cdq('Author').scope :prolific, cdq(:publish_count).gt(99)
+```
+> NOTE: strings and symbols are NOT interchangeable. `cdq('Entity')` gives you a
+query generator for an entity, but `cdq(:attribute)` starts a predicate for an
+attribute.
 
 ## Things that are currently missing
 
 * There is no facility for custom migrations yet
 * There are no explicit validations (but you can define them on your data model)
+* Lifecycle Callbacks or Observers
 
