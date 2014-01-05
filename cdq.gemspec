@@ -15,6 +15,7 @@ Gem::Specification.new do |gem|
   files.concat(Dir.glob('lib/**/*.rb'))
   files.concat(Dir.glob('motion/**/*.rb'))
   files.concat(Dir.glob('templates/**/*.rb'))
+  files.concat(Dir.glob('vendor/**/*.rb'))
   gem.files = files
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "cdq"
