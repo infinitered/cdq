@@ -21,7 +21,7 @@ so much.
 CDQ aims to streamline the process of getting you up and running Core Data, while
 avoiding too much abstraction or method pollution on top of the SDK.  While it 
 borrows many ideas from ActiveRecord (especially AREL), it is designed to 
-harmonize with Core Data's ways of doing things first.  
+harmonize with Core Data's way of doing things first.  
 
 ### Why use a static Data Model?
 
@@ -33,7 +33,12 @@ schema as it grows, if you can follow a few [simple rules](https://developer.app
 
 ### Quick Start:
 
-For brand-new apps, or just to try it out, go follow the instructions [here](https://github.com/infinitered/cdq/wiki/Greenfield-Quick-Start).
+For brand-new apps, or just to try it out, check out the
+[Greenfield Quick Start](https://github.com/infinitered/cdq/wiki/Greenfield-Quick-Start) tutorial.
+There's also a
+[Cheat Sheet](https://github.com/infinitered/cdq/wiki/CDQ-Cheat-Sheet)
+and
+[API docs](http://rubydoc.info/github/infinitered/cdq).
 
 ### Even Quicker Start:
 
