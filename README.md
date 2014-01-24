@@ -255,7 +255,7 @@ dedicated model classes for your entities.
 familiar-looking and natural syntax for queries and scopes:
 
 ```ruby
-  class Author < CDQManagedOjbect
+  class Author < CDQManagedObject
   end
 ```
 
@@ -265,7 +265,7 @@ You can save up partially-constructed queries for later use using named scopes, 
 combining them seamlessly with other queries or other named scopes:
 
 ```ruby
-  class Author < CDQManagedOjbect
+  class Author < CDQManagedObject
     scope :a_authors, where(:name).begins_with('A')
     scope :prolific, where(:publish_count).gt(99)
   end
