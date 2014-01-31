@@ -153,6 +153,33 @@ module CDQ #:nodoc:
       end
     end
 
+    def log(log_type = nil)
+      out = "\n\n                              ATTRIBUTES"
+      out <<   " \n Name                 | type                | default                       |"              
+      line =   " \n- - - - - - - - - - - | - - - - - - - - - - | - - - - - - - - - - - - - - - |"
+      out << line
+
+      self.entity_description.attributesByName.each do |name, desc|
+        out << " \n #{name.ljust(21)}|"
+        out << " #{desc.attributeValueClassName.ljust(20)}|"
+        out << " #{desc.defaultValue.to_s.ljust(30)}|"
+      end
+
+      out << line
+      out << "\n\n"
+
+      self.each do |o|
+        out << o.inspect
+        out << "\n"
+      end
+
+      if log_type == :string
+        out
+      else
+        NSLog out
+      end
+    end
+
     private
 
     def named_scopes

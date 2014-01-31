@@ -37,6 +37,11 @@ module CDQ
       tq.where(:name).eq("maya angelou").first.should == maya
     end
 
+    it 'should log query' do
+      Author.create(name: "eecummings")
+      Author.log(:string).should != nil
+    end
+
   end
 
   describe "CDQ Targeted Query with data" do

@@ -17,6 +17,32 @@ module CDQ
       !@current && @config.model_url.nil?
     end
 
+    def log(log_type = nil)
+      out =   "\n\n                MODELS"
+      out <<  "\n  Model                    |     count |"              
+      line =  "\n - - - - - - - - - - - - - | - - - - - |"
+      out << line
+
+      self.current.entities.each do |entity| 
+        out << "\n  #{entity.name.ljust(25)}|"
+        out << " #{CDQ.cdq(entity.name).count.to_s.rjust(9)} |"
+      end
+
+      out << line
+
+      entities = CDQ.cdq.models.current.entities
+      if entities && (entity_count = entities.length) && entity_count > 0
+        out << "\n#{entity_count} models"
+        out << "\n\nYou can log a model like so: #{self.current.entities.first.name}.log"
+      end
+
+      if log_type == :string
+        out
+      else
+        NSLog out
+      end
+    end
+
     private
 
     def load_model
