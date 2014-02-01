@@ -61,7 +61,8 @@ module CDQ
       before do
         class Writer
           scope :eecummings, where(:name).eq('eecummings')
-          scope :edgaralpoe, where(:name).eq('edgar allen poe')
+          scope :edgaralpoe, cdq(:name).eq('edgar allen poe')
+          scope :by_name { |name| cdq(:name).eq(name) }
         end
         @eec = cdq(Writer).create(name: 'eecummings')
         @poe = cdq(Writer).create(name: 'edgar allen poe')
@@ -75,6 +76,18 @@ module CDQ
       it "also defines scopes on the cdq object" do
         cdq('Writer').eecummings.array.should == [@eec]
         cdq('Writer').edgaralpoe.array.should == [@poe]
+      end
+
+      describe "CDQ Managed Object dynamic scopes" do
+
+        class Writer
+          scope :by_name { |name| cdq(:name).eq(name) }
+        end
+
+        it "uses the variable you passed in" do
+          Writer.by_name('eecummings').array.should == [@eec]
+          Writer.by_name('edgar allen poe').array.should == [@poe]
+        end
       end
     end
   end

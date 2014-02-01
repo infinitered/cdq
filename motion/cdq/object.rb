@@ -53,6 +53,7 @@ module CDQ
       error = Pointer.new(:object)
       result = block.call(error)
       if error[0]
+        p error[0].debugDescription
         raise "Error while fetching: #{error[0].debugDescription}"
       end
       result || default
