@@ -159,7 +159,10 @@ module CDQ #:nodoc:
       line =   " \n- - - - - - - - - - - | - - - - - - - - - - | - - - - - - - - - - - - - - - |"
       out << line
 
-      self.entity_description.attributesByName.each do |name, desc|
+      abn = entity_description.attributesByName
+      rbn = entity_description.relationshipsByName
+
+      abn.each do |name, desc|
         out << " \n #{name.ljust(21)}|"
         out << " #{desc.attributeValueClassName.ljust(20)}|"
         out << " #{desc.defaultValue.to_s.ljust(30)}|"
@@ -170,24 +173,30 @@ module CDQ #:nodoc:
 
       self.each do |o|
         out << "OID: "
-        out << '"' << o.objectID.URIRepresentation.absoluteString << '"'
+        out << o.objectID.URIRepresentation.absoluteString.inspect
         out << "\n"
-        self.entity_description.attributesByName.each do |name, desc|
-          out << "  #{name}: "
-          out << o.send(name).to_s[0,(97 - name.length)]
+
+        awidth = abn.keys.map(&:length).max
+        rwidth = rbn.keys.map(&:length).max
+        width = [awidth, rwidth].max
+
+        abn.each do |name, desc|
+          out << "  #{name.ljust(width)} : "
+          out << o.send(name).inspect[0,95 - width]
           out << "\n"
         end
-        self.entity_description.relationshipsByName.each do |name, desc|
+        rbn.each do |name, desc|
           rel = CDQRelationshipQuery.new(o, name)
           if desc.isToMany
-            out << "  #{name} (count): "
+            out << "  #{name.ljust(width)} : "
             out << rel.count.to_s
+            out << ' (count)'
           else
-            out << "  #{name}: "
+            out << "  #{name.ljust(width)} : "
             if name.nil?
               out << "(null)"
             else
-              out << '"' << rel.first.objectID.URIRepresentation.absoluteString << '"'
+              out << rel.first.objectID.URIRepresentation.absoluteString.inspect
             end
           end
           out << "\n"
