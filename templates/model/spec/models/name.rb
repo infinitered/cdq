@@ -1,7 +1,9 @@
 describe '<%= @name_camel_case %>' do
 
   before do
-    include CDQ
+    class << self
+      include CDQ
+    end
     cdq.setup
   end
 
