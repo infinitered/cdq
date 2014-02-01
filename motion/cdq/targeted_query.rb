@@ -155,7 +155,7 @@ module CDQ #:nodoc:
 
     def log(log_type = nil)
       out = "\n\n                              ATTRIBUTES"
-      out <<   " \n Name                 | type                | default                       |"              
+      out <<   " \n Name                 | type                | default                       |"
       line =   " \n- - - - - - - - - - - | - - - - - - - - - - | - - - - - - - - - - - - - - - |"
       out << line
 
@@ -169,7 +169,29 @@ module CDQ #:nodoc:
       out << "\n\n"
 
       self.each do |o|
-        out << o.inspect
+        out << "OID: "
+        out << '"' << o.objectID.URIRepresentation.absoluteString << '"'
+        out << "\n"
+        self.entity_description.attributesByName.each do |name, desc|
+          out << "  #{name}: "
+          out << o.send(name).to_s[0,(97 - name.length)]
+          out << "\n"
+        end
+        self.entity_description.relationshipsByName.each do |name, desc|
+          rel = CDQRelationshipQuery.new(o, name)
+          if desc.isToMany
+            out << "  #{name} (count): "
+            out << rel.count.to_s
+          else
+            out << "  #{name}: "
+            if name.nil?
+              out << "(null)"
+            else
+              out << '"' << rel.first.objectID.URIRepresentation.absoluteString << '"'
+            end
+          end
+          out << "\n"
+        end
         out << "\n"
       end
 
@@ -178,6 +200,9 @@ module CDQ #:nodoc:
       else
         NSLog out
       end
+
+    rescue Exception => e
+      p e
     end
 
     private

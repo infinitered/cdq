@@ -5,6 +5,8 @@ end
 
 require 'ruby-xcdm'
 
+ENV['COLUMNS'] ||= `tput cols`.strip
+
 Motion::Project::App.setup do |app|
   parent = File.join(File.dirname(__FILE__), '..')
   app.files.unshift(Dir.glob(File.join(parent, "motion/cdq/**/*.rb")))
