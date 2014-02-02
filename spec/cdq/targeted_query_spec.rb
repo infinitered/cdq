@@ -121,5 +121,18 @@ module CDQ
       tq.date_span(Time.local(2002), Time.local(2004)).sort_by(:publishedAt).array.should == [b, c]
       Article.published_since(Time.local(2003)).sort_by(:publishedAt).array.should == [c, d]
     end
+
+    it "can create a scope with the same name for two entities without clashing" do
+      article = cdq('Article')
+      a = article.create(publishedAt: Time.local(2001))
+      author = @tq
+
+      article.scope :past, cdq(:publishedAt).lt(Time.now)
+      author.scope :past, cdq(:name).eq('eecummings')
+
+      article.past.array.should == [a]
+      author.past.array.should == [@eecummings]
+
+    end
   end
 end

@@ -173,7 +173,7 @@ module CDQ #:nodoc:
 
       self.each do |o|
         out << "OID: "
-        out << o.objectID.URIRepresentation.absoluteString.inspect
+        out << oid(o)
         out << "\n"
 
         awidth = abn.keys.map(&:length).max
@@ -193,11 +193,7 @@ module CDQ #:nodoc:
             out << ' (count)'
           else
             out << "  #{name.ljust(width)} : "
-            if name.nil?
-              out << "(null)"
-            else
-              out << rel.first.objectID.URIRepresentation.absoluteString.inspect
-            end
+            out << oid(rel.first)
           end
           out << "\n"
         end
@@ -215,6 +211,10 @@ module CDQ #:nodoc:
     end
 
     private
+
+    def oid(obj)
+      obj ? obj.objectID.URIRepresentation.absoluteString.inspect : "nil"
+    end
 
     def named_scopes
       @@named_scopes ||= {}
