@@ -82,8 +82,20 @@ module CDQ
     end
 
     it "can sort descending" do
+      @query.sort_by(:name, order: :desc).sort_descriptors.should == [
+        NSSortDescriptor.sortDescriptorWithKey('name', ascending: false)
+      ]
+    end
+
+    it "can sort descending (older API)" do
       @query.sort_by(:name, :desc).sort_descriptors.should == [
         NSSortDescriptor.sortDescriptorWithKey('name', ascending: false)
+      ]
+    end
+
+    it "can sort case insensitive" do
+      @query.sort_by(:name, case_insensitive: true).sort_descriptors.should == [
+        NSSortDescriptor.sortDescriptorWithKey('name', ascending: true, selector: "localizedCaseInsensitiveCompare:")
       ]
     end
 
@@ -105,7 +117,7 @@ module CDQ
     it "handles complex examples" do
       query1 = CDQQuery.new
       query2 = query1.where(CDQQuery.new.where(:name).ne('bob', NSCaseInsensitivePredicateOption).or(:amount).gt(42).sort_by(:name))
-      query3 = query1.where(CDQQuery.new.where(:enabled).eq(true).and(:'job.title').ne(nil).sort_by(:amount, :desc))
+      query3 = query1.where(CDQQuery.new.where(:enabled).eq(true).and(:'job.title').ne(nil).sort_by(:amount, order: :desc))
 
       query4 = query3.where(query2)
       query4.predicate.predicateFormat.should == '(enabled == 1 AND job.title != nil) AND (name !=[c] "bob" OR amount > 42)'
