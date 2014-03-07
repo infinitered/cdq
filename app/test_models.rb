@@ -3,7 +3,7 @@ end
 
 class Article < CDQManagedObject
   scope :all_published, where(:published).eq(true)
-  scope :with_title, where(:title).ne(nil).sort_by(:title, :descending)
+  scope :with_title, where(:title).ne(nil).sort_by(:title, order: :descending)
   scope :published_since { |date| where(:publishedAt).ge(date) }
 end
 

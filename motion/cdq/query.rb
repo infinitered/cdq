@@ -96,16 +96,43 @@ module CDQ
     # old ones.
     #
     #   @param key The attribute to sort on
-    #   @param dir The sort direction (default = :ascending)
+    #   @param options Optional options.
     #
-    def sort_by(key, dir = :ascending)
-      if dir.to_s[0,4].downcase == 'desc'
+    # Options include:
+    #   order:  If :descending or (or :desc), order is descrnding.  Otherwise,
+    #           it is ascending.
+    #   case_insensitive:  True or false.  If true, the sort descriptor is
+    #           built using <tt>localizedCaseInsensitiveCompare</tt>
+    #
+    def sort_by(key, options = {})
+      # backwards compat:  if options is not a hash, it is a sort ordering.
+      unless options.is_a?Hash
+        sort_order = options
+        options = {
+          order: sort_order,
+          case_insensitive: false,
+        }
+      end
+
+      options = {
+        order: :ascending,
+      }.merge(options)
+
+      order = options[:order].to_s
+
+      if order[0,4].downcase == 'desc'
         ascending = false
       else
         ascending = true
       end
 
-      clone(sort_descriptors: @sort_descriptors + [NSSortDescriptor.sortDescriptorWithKey(key, ascending: ascending)])
+      if options[:case_insensitive]
+        descriptor = NSSortDescriptor.sortDescriptorWithKey(key, ascending: ascending, selector: "localizedCaseInsensitiveCompare:")
+      else
+        descriptor = NSSortDescriptor.sortDescriptorWithKey(key, ascending: ascending)
+      end
+
+      clone(sort_descriptors: @sort_descriptors + [descriptor])
     end
 
     # Return an NSFetchRequest that will implement this query
