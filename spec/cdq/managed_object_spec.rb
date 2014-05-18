@@ -42,6 +42,16 @@ module CDQ
       Writer.all.array.should == []
     end
 
+    it "can destroy all instances of itself" do
+      cdq(Writer).create(name: 'Dean Kuntz')
+      cdq(Writer).create(name: 'Stephen King')
+      cdq(Writer).create(name: 'Tom Clancy')
+      Writer.count.should == 3
+
+      Writer.destroy_all!
+      Writer.count.should == 0
+    end
+
     it "works with entities that do not have a specific implementation class" do
       rh = cdq('Publisher').create(name: "Random House")
       cdq('Publisher').where(:name).include("Random").first.should == rh
