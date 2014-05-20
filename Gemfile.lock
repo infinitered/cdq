@@ -8,16 +8,16 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (3.2.17)
+    activesupport (3.2.18)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     builder (3.2.2)
     i18n (0.6.9)
-    motion-stump (0.3.0)
+    motion-stump (0.3.2)
     motion-yaml (1.2)
-    multi_json (1.9.0)
+    multi_json (1.10.1)
     plist (3.1.0)
-    rake (10.1.0)
+    rake (10.3.2)
     ruby-xcdm (0.0.7)
       activesupport (~> 3.2)
       builder (~> 3.2)
