@@ -1,4 +1,5 @@
 
+require 'fileutils'
 
 module CDQ
   class Generator
@@ -57,7 +58,7 @@ module CDQ
           puts "     Using existing directory: #{@in_app_path}"
         else
           puts "  \u0394  Creating directory: #{@in_app_path}"
-          Dir.mkdir(@in_app_path) unless @dry_run
+          FileUtils.mkdir_p(@in_app_path) unless @dry_run
         end
 
         results = load_and_parse_erb(template_file_path_and_name)
