@@ -72,6 +72,17 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
       super || cdq.respond_to?(name)
     end
 
+    def destroy_all
+      self.all.array.each do |instance|
+        instance.destroy
+      end
+    end
+
+    def destroy_all!
+      destroy_all
+      cdq.save
+    end
+
   end
 
   # Register this object for destruction with the current context.  Will not
