@@ -1,2 +1,6 @@
 language: objective-c
-before_install: ruby --version
+before_install: 
+  - (ruby --version)
+  - sudo chown -R travis ~/Library/RubyMotion
+  - mkdir -p ~/Library/RubyMotion/build
+  - sudo motion updaten
