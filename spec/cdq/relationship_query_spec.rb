@@ -55,7 +55,15 @@ module CDQ
 
       ram.spouses.count.should == 2
       ram.spouses.first.writers.count.should == 1
+    end
 
+    it "can remove objects from the relationship" do
+      article = Article.create(title: "thing", body: "bank")
+      cdq.save
+      @author.articles.count.should == 1
+      @author.articles.remove(@article1)
+      cdq.save
+      @author.articles.count.should == 0
     end
 
     it "iterates over ordered sets correctly" do

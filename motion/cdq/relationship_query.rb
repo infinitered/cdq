@@ -39,6 +39,12 @@ module CDQ
     end
     alias_method :<<, :add
 
+    # Remove objects from the relationship
+    #
+    def remove(obj)
+      @set.removeObject obj
+    end
+
     def self.extend_set(set, owner, name)
       set.extend SetExt
       set.extend Enumerable
@@ -85,6 +91,10 @@ module CDQ
 
       def new(opts = {})
         @__query__.new(opts)
+      end
+
+      def remove(opts = {})
+        @__query__.remove(opts)
       end
 
       def where(*args)
