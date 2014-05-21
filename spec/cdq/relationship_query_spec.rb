@@ -57,6 +57,30 @@ module CDQ
       ram.spouses.first.writers.count.should == 1
     end
 
+    it "can remove a relationship and persist it" do
+      ram = Writer.create(name: "Ram Das")
+      ram.spouses.add cdq('Spouse').create(name: "First Spouse")
+      ram.spouses << cdq('Spouse').create
+      ram.spouses.count.should == 2
+      cdq.save(always_wait: true)
+
+      cdq.contexts.reset!; ram = nil; cdq.setup
+      ram = Writer.where(:name).eq("Ram Das").first
+      ram.spouses.count.should == 2
+      first_spouse = ram.spouses.first
+      first_spouse.writers.count.should == 1
+      ram.spouses.remove(first_spouse)
+      ram.spouses.count.should == 1
+      first_spouse.writers.count.should == 0
+      cdq.save(always_wait: true)
+
+      cdq.contexts.reset!; ram = nil; cdq.setup
+      ram = Writer.where(:name).eq("Ram Das").first
+      ram.spouses.count.should == 1
+      ex_spouse = cdq('Spouse').where(:name).eq("First Spouse").first
+      ex_spouse.writers.count.should == 0
+    end
+
     it "can remove objects from the relationship" do
       article = Article.create(title: "thing", body: "bank")
       cdq.save

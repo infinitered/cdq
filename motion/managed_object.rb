@@ -96,13 +96,28 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     description
   end
 
+  def ordered_set?(name)
+    # isOrdered is returning 0/1 instead of documented BOOL
+    ordered = entity.relationshipsByName[name].isOrdered
+    return true if ordered == true || ordered == 1
+    return false if ordered == false || ordered == 0
+  end
+
+  def set_to_extend(name)
+    if ordered_set?(name)
+      mutableOrderedSetValueForKey(name)
+    else
+      mutableSetValueForKey(name)
+    end
+  end
+
   protected
 
   # Called from method that's dynamically added from
   # +[CoreDataManagedObjectBase defineRelationshipMethod:]
   def relationshipByName(name)
     willAccessValueForKey(name)
-    set = CDQRelationshipQuery.extend_set(primitiveValueForKey(name), self, name)
+    set = CDQRelationshipQuery.extend_set(set_to_extend(name), self, name)
     didAccessValueForKey(name)
     set
   end

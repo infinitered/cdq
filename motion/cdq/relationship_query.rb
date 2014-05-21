@@ -6,7 +6,12 @@ module CDQ
     def initialize(owner, name, set = nil, opts = {})
       @owner = owner
       @relationship_name = name
-      @set = set || @owner.send(name)
+      @set = set
+      if @owner.ordered_set?(name)
+        @set ||= @owner.mutableOrderedSetValueForKey(name)
+      else
+        @set ||= @owner.mutableSetValueForKey(name)
+      end
       relationship = owner.entity.relationshipsByName[name]
       @inverse_rel = relationship.inverseRelationship
       entity_description = relationship.destinationEntity
@@ -30,11 +35,6 @@ module CDQ
     # Add an existing object to the relationship
     #
     def add(obj)
-      if @inverse_rel.isToMany
-        obj.send(@inverse_rel.name).addObject(@owner)
-      else
-        obj.send("#{@inverse_rel.name}=", @owner)
-      end
       @set.addObject obj
     end
     alias_method :<<, :add
