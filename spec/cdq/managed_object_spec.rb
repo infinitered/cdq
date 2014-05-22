@@ -54,6 +54,7 @@ module CDQ
 
     it "works with entities that do not have a specific implementation class" do
       rh = cdq('Publisher').create(name: "Random House")
+      cdq.save
       cdq('Publisher').where(:name).include("Random").first.should == rh
       rh.destroy
       cdq.save

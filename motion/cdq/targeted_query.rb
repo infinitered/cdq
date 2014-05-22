@@ -176,8 +176,8 @@ module CDQ #:nodoc:
         out << oid(o)
         out << "\n"
 
-        awidth = abn.keys.map(&:length).max
-        rwidth = rbn.keys.map(&:length).max
+        awidth = abn.keys.map(&:length).max || 0
+        rwidth = rbn.keys.map(&:length).max || 0
         width = [awidth, rwidth].max
 
         abn.each do |name, desc|
@@ -205,9 +205,6 @@ module CDQ #:nodoc:
       else
         NSLog out
       end
-
-    rescue Exception => e
-      p e
     end
 
     private

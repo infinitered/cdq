@@ -38,8 +38,9 @@ module CDQ
     end
 
     it 'should log query' do
-      Author.create(name: "eecummings")
+      Article.create(title: "thing", body: "thing", author: Author.create(name: "eecummings"))
       Author.log(:string).should != nil
+      Article.log(:string).should != nil
     end
 
   end

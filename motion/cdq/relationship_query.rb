@@ -7,12 +7,14 @@ module CDQ
       @owner = owner
       @relationship_name = name
       @set = set
-      if @owner.ordered_set?(name)
-        @set ||= @owner.mutableOrderedSetValueForKey(name)
-      else
-        @set ||= @owner.mutableSetValueForKey(name)
-      end
       relationship = owner.entity.relationshipsByName[name]
+      if relationship.isToMany
+        if @owner.ordered_set?(name)
+          @set ||= @owner.mutableOrderedSetValueForKey(name)
+        else
+          @set ||= @owner.mutableSetValueForKey(name)
+        end
+      end
       @inverse_rel = relationship.inverseRelationship
       entity_description = relationship.destinationEntity
       target_class = constantize(entity_description.managedObjectClassName)
