@@ -36,12 +36,6 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
       end
     end
 
-    # Shortcut to look up the entity description for this class
-    #
-    def entity_description
-      cdq.models.current.entitiesByName[name]
-    end
-
     # Creates a CDQ scope, but also defines a method on the class that returns the
     # query directly.
     #
@@ -96,6 +90,42 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     description
   end
 
+  def log(log_type = nil)
+    out = "\nOID: "
+    out << oid
+    out << "\n"
+
+    atts = entity.attributesByName
+    rels = entity.relationshipsByName
+
+    width = (atts.keys.map(&:length) + rels.keys.map(&:length)).max || 0
+
+    atts.each do |name, desc|
+      out << "  #{name.ljust(width)} : "
+      out << send(name).inspect[0,95 - width]
+      out << "\n"
+    end
+
+    rels.each do |name, desc|
+      rel = CDQRelationshipQuery.new(self, name, nil, context: managedObjectContext)
+      if desc.isToMany
+        out << "  #{name.ljust(width)} : "
+        out << rel.count.to_s
+        out << ' (count)'
+      else
+        out << "  #{name.ljust(width)} : "
+        out << (rel.first && rel.first.oid || "nil")
+      end
+    end
+    out << "\n"
+
+    if log_type == :string
+      out
+    else
+      NSLog out
+    end
+  end
+
   def ordered_set?(name)
     # isOrdered is returning 0/1 instead of documented BOOL
     ordered = entity.relationshipsByName[name].isOrdered
@@ -111,6 +141,10 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     end
   end
 
+  def oid
+    objectID.URIRepresentation.absoluteString.inspect
+  end
+
   protected
 
   # Called from method that's dynamically added from
@@ -121,4 +155,5 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     didAccessValueForKey(name)
     set
   end
+
 end

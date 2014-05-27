@@ -83,8 +83,8 @@ module CDQ #:nodoc:
     #
     # Causes execution.
     #
-    def each(&block)
-      array.each(&block)
+    def each(*args, &block)
+      array.each(*args, &block)
     end
 
     # Returns the fully-contstructed fetch request, which can be executed outside of CDQ.
@@ -159,10 +159,7 @@ module CDQ #:nodoc:
       line =   " \n- - - - - - - - - - - | - - - - - - - - - - | - - - - - - - - - - - - - - - |"
       out << line
 
-      abn = entity_description.attributesByName
-      rbn = entity_description.relationshipsByName
-
-      abn.each do |name, desc|
+      entity_description.attributesByName.each do |name, desc|
         out << " \n #{name.ljust(21)}|"
         out << " #{desc.attributeValueClassName.ljust(20)}|"
         out << " #{desc.defaultValue.to_s.ljust(30)}|"
@@ -172,32 +169,7 @@ module CDQ #:nodoc:
       out << "\n\n"
 
       self.each do |o|
-        out << "OID: "
-        out << oid(o)
-        out << "\n"
-
-        awidth = abn.keys.map(&:length).max || 0
-        rwidth = rbn.keys.map(&:length).max || 0
-        width = [awidth, rwidth].max
-
-        abn.each do |name, desc|
-          out << "  #{name.ljust(width)} : "
-          out << o.send(name).inspect[0,95 - width]
-          out << "\n"
-        end
-        rbn.each do |name, desc|
-          rel = CDQRelationshipQuery.new(o, name)
-          if desc.isToMany
-            out << "  #{name.ljust(width)} : "
-            out << rel.count.to_s
-            out << ' (count)'
-          else
-            out << "  #{name.ljust(width)} : "
-            out << oid(rel.first)
-          end
-          out << "\n"
-        end
-        out << "\n"
+        out << o.log(:string)
       end
 
       if log_type == :string
@@ -210,7 +182,7 @@ module CDQ #:nodoc:
     private
 
     def oid(obj)
-      obj ? obj.objectID.URIRepresentation.absoluteString.inspect : "nil"
+      obj ? obj.oid : "nil"
     end
 
     def named_scopes
