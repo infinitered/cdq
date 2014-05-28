@@ -33,6 +33,7 @@ module CDQ
         options = { NSMigratePersistentStoresAutomaticallyOption => true,
                     NSInferMappingModelAutomaticallyOption => true }
         url = @config.database_url
+        mkdir_p File.dirname(url.path)
         store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
                                                        configuration:nil,
                                                        URL:url,
@@ -47,6 +48,17 @@ module CDQ
         coordinator
       end
     end
+    
+    def mkdir_p dir
+      error = Pointer.new(:object)
+      m = NSFileManager.defaultManager
+      r = m.createDirectoryAtPath dir, withIntermediateDirectories:true, attributes:nil, error:error
+      unless r
+        NSLog "#{error[0].localizedDescription}"
+        raise error[0].localizedDescription
+      end
+    end
+    
   end
 
 end
