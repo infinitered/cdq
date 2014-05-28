@@ -40,7 +40,7 @@ module CDQ
       end
 
       @name = h['name'] || h[:name] || NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")
-      @database_dir = search_directory_for h['database_dir']
+      @database_dir = search_directory_for h['database_dir'] || h[:database_dir]
       @database_name = h['database_name'] || h[:database_name] || name
       @model_name = h['model_name'] || h[:model_name] || name
     end
