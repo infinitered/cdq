@@ -52,6 +52,20 @@ module CDQ
       File.unlink(cf_file)
     end
 
+    it "can override database_url specifically NSDocument" do
+      cf_file = File.join(NSBundle.mainBundle.bundlePath, "cdq.yml")
+      yaml_to_file(cf_file, database_dir: "NSDocument")
+      config = CDQConfig.new(cf_file)
+      config.database_url.path.should =~ %r{Documents/#{@bundle_name}.sqlite$}
+    end
+
+    it "can override database_url specifically NSApplicationSupportDirectory" do
+      cf_file = File.join(NSBundle.mainBundle.bundlePath, "cdq.yml")
+      yaml_to_file(cf_file, database_dir: "NSApplicationSupportDirectory")
+      config = CDQConfig.new(cf_file)
+      config.database_url.path.should =~ %r{Library/Application Support/#{@bundle_name}.sqlite$}
+    end
+
     it "constructs database_url" do
       config = CDQConfig.new(nil)
       config.database_url.class.should == NSURL
