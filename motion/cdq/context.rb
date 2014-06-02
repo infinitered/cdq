@@ -82,6 +82,7 @@ module CDQ
     # Save all contexts in the stack, starting with the current and working down.
     #
     def save(options = {})
+      set_timestamps
       always_wait = options[:always_wait]
       stack.reverse.each do |context|
         if always_wait || context.concurrencyType == NSMainQueueConcurrencyType
@@ -186,6 +187,17 @@ module CDQ
           else
             puts indent + "#{key}: #{value}"
           end
+        end
+      end
+    end
+    
+    def set_timestamps
+      now = Time.now
+      stack.each do |context|
+        eos = context.insertedObjects.allObjects + context.updatedObjects.allObjects
+        eos.each do |e|
+          e.created_at ||= now if e.respond_to? :created_at=
+          e.updated_at = now if e.respond_to? :created_at=
         end
       end
     end
