@@ -196,7 +196,7 @@ module CDQ
       eos = current.insertedObjects.allObjects + current.updatedObjects.allObjects
       eos.each do |e|
         e.created_at ||= now if e.respond_to? :created_at=
-        e.updated_at = now if e.respond_to? :created_at=
+        e.updated_at = now if e.respond_to? :updated_at=
       end
     end
 
