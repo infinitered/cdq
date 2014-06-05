@@ -193,12 +193,10 @@ module CDQ
     
     def set_timestamps
       now = Time.now
-      stack.each do |context|
-        eos = context.insertedObjects.allObjects + context.updatedObjects.allObjects
-        eos.each do |e|
-          e.created_at ||= now if e.respond_to? :created_at=
-          e.updated_at = now if e.respond_to? :created_at=
-        end
+      eos = current.insertedObjects.allObjects + current.updatedObjects.allObjects
+      eos.each do |e|
+        e.created_at ||= now if e.respond_to? :created_at=
+        e.updated_at = now if e.respond_to? :created_at=
       end
     end
 
