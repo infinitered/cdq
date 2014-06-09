@@ -62,7 +62,7 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
       cdq.send(name, *args, &block)
     end
 
-    def responds_to?(name)
+    def respond_to?(name)
       super || cdq.respond_to?(name)
     end
 

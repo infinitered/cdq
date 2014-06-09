@@ -8,6 +8,7 @@ schema "0.0.1" do
     boolean   :published,   default: false
     datetime  :publishedAt, default: false
     string    :title,       optional: false
+    string    :title2
 
     belongs_to   :author
     has_many :citations

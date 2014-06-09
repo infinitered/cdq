@@ -67,6 +67,18 @@ module CDQ
       eec.articles.sort_by(:title).first.should == art
     end
 
+    describe "respond_to?" do
+
+      before do
+        @art = Article.new
+      end
+
+      it "works with setters" do
+        @art.respond_to?(:"title=").should == true
+      end
+
+    end
+
     describe "CDQ Managed Object scopes" do
 
       before do
