@@ -5,7 +5,7 @@ module CDQ
   describe "CDQ Config" do
 
     before do
-      @bundle_name = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")
+      @bundle_name = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleExecutable")
     end
 
     it "sets default values when no config file present" do
