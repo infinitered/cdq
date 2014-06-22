@@ -13,6 +13,7 @@ module CDQ
       config.name.should == @bundle_name
       config.database_name.should == config.name
       config.model_name.should == config.name
+      config.icloud == false
     end
 
     it "can initialize values from a hash" do
@@ -66,10 +67,42 @@ module CDQ
       config.database_url.path.should =~ %r{Library/Application Support/#{@bundle_name}.sqlite$}
     end
 
+    it "can override icloud specifically" do
+      cf_file = File.join(NSBundle.mainBundle.bundlePath, "cdq.yml")
+      yaml_to_file(cf_file, icloud: true)
+      config = CDQConfig.new(cf_file)
+      config.icloud.should == true
+      File.unlink(cf_file)
+    end
+
+    it "can override icloud specifically (case false)" do
+      cf_file = File.join(NSBundle.mainBundle.bundlePath, "cdq.yml")
+      yaml_to_file(cf_file, icloud: false)
+      config = CDQConfig.new(cf_file)
+      config.icloud.should == false
+      File.unlink(cf_file)
+    end
+
+    it "can override icloud container specifically" do
+      cf_file = File.join(NSBundle.mainBundle.bundlePath, "cdq.yml")
+      yaml_to_file(cf_file, icloud_container: "icloud.container")
+      config = CDQConfig.new(cf_file)
+      config.icloud_container.should == "icloud.container"
+      File.unlink(cf_file)
+    end
+
     it "constructs database_url" do
       config = CDQConfig.new(nil)
       config.database_url.class.should == NSURL
       config.database_url.path.should =~ %r{Documents/#{@bundle_name}.sqlite$}
+    end
+
+    it "should parse an empty config" do
+      cf_file = File.join(NSBundle.mainBundle.bundlePath, "cdq.yml")
+      yaml_to_file(cf_file, {})
+      config = CDQConfig.new(cf_file)
+      config.should != nil
+      File.unlink(cf_file)
     end
 
     it "constructs model_url" do
