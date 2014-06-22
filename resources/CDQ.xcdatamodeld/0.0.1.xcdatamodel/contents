@@ -32,4 +32,9 @@
     <attribute optional="YES" syncable="YES" attributeType="Date" name="timestamp"/>
     <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="article" inverseEntity="Article" destinationEntity="Article" inverseName="citations" maxCount="1"/>
   </entity>
+  <entity name="Timestamp" syncable="YES" representedClassName="Timestamp">
+    <attribute optional="YES" syncable="YES" attributeType="Boolean" name="flag"/>
+    <attribute optional="YES" syncable="YES" attributeType="Date" name="created_at"/>
+    <attribute optional="YES" syncable="YES" attributeType="Date" name="updated_at"/>
+  </entity>
 </model>

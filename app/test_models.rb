@@ -13,3 +13,6 @@ end
 class Writer < CDQManagedObject
 end
 
+class Timestamp < CDQManagedObject
+end
+

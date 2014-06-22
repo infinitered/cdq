@@ -41,5 +41,11 @@ schema "0.0.1" do
     datetime   :timestamp
     belongs_to :article
   end
+  
+  entity "Timestamp" do
+    boolean   :flag
+    datetime  :created_at
+    datetime  :updated_at
+  end
 
 end
