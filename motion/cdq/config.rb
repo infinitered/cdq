@@ -47,8 +47,12 @@ module CDQ
       @database_name = h['database_name'] || h[:database_name] || name
       @model_name = h['model_name'] || h[:model_name] || name
       @icloud = begin
-        v = h['icloud'] || h[:icloud]
-        v ? v.boolValue : false
+        case h['icloud'] || h[:icloud]
+        when true, 1
+          true
+        else
+          false
+        end
       end
       @icloud_container = h['icloud_container'] || h[:icloud_container]
     end

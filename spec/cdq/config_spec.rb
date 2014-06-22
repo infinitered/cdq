@@ -67,7 +67,7 @@ module CDQ
       config.database_url.path.should =~ %r{Library/Application Support/#{@bundle_name}.sqlite$}
     end
 
-    it "can override icloud specifically" do
+    it "can override icloud specifically as Fixnum 1" do
       cf_file = File.join(NSBundle.mainBundle.bundlePath, "cdq.yml")
       yaml_to_file(cf_file, icloud: true)
       config = CDQConfig.new(cf_file)
@@ -75,9 +75,25 @@ module CDQ
       File.unlink(cf_file)
     end
 
-    it "can override icloud specifically (case false)" do
+    it "can override icloud specifically as Fixnum 0" do
       cf_file = File.join(NSBundle.mainBundle.bundlePath, "cdq.yml")
       yaml_to_file(cf_file, icloud: false)
+      config = CDQConfig.new(cf_file)
+      config.icloud.should == false
+      File.unlink(cf_file)
+    end
+    
+    it "can override icloud specifically as True" do
+      cf_file = File.join(NSBundle.mainBundle.bundlePath, "cdq.yml")
+      text_to_file(cf_file, "icloud: true")
+      config = CDQConfig.new(cf_file)
+      config.icloud.should == true
+      File.unlink(cf_file)
+    end
+
+    it "can override icloud specifically as False" do
+      cf_file = File.join(NSBundle.mainBundle.bundlePath, "cdq.yml")
+      text_to_file(cf_file, "icloud: false")
       config = CDQConfig.new(cf_file)
       config.icloud.should == false
       File.unlink(cf_file)
@@ -114,6 +130,10 @@ module CDQ
     def yaml_to_file(file, hash)
       contents = YAML.dump(hash)
       File.open(file,'w+') { |f| f.write(contents) }
+    end
+
+    def text_to_file(file, text)
+      File.open(file,'w+') { |f| f.write(text) }
     end
 
   end
