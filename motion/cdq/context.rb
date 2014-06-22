@@ -3,7 +3,7 @@ module CDQ
   class CDQContextManager
 
     BACKGROUND_SAVE_NOTIFICATION = 'com.infinitered.cdq.context.background_save_completed'
-    DID_FINISH_IMPORT = 'com.infinitered.cdq.context.did_finish_import'
+    DID_FINISH_IMPORT_NOTIFICATION = 'com.infinitered.cdq.context.did_finish_import'
 
     def initialize(opts = {})
       @store_manager = opts[:store_manager]
@@ -145,7 +145,7 @@ module CDQ
     def did_finish_import(notification)
       @observed_context.performBlockAndWait ->{
         @observed_context.mergeChangesFromContextDidSaveNotification(notification)
-        NSNotificationCenter.defaultCenter.postNotificationName(DID_FINISH_IMPORT, object:self, userInfo:{context: @observed_context})
+        NSNotificationCenter.defaultCenter.postNotificationName(DID_FINISH_IMPORT_NOTIFICATION, object:self, userInfo:{context: @observed_context})
       }
     end
 
