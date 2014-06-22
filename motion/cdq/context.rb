@@ -79,6 +79,7 @@ module CDQ
         if @store_manager.invalid?
           raise "store coordinator not found. Cannot create the first context without one."
         else
+          context.mergePolicy = NSMergePolicy.alloc.initWithMergeType(NSMergeByPropertyObjectTrumpMergePolicyType)
           context.performBlockAndWait ->{
             coordinator = @store_manager.current
             context.persistentStoreCoordinator = coordinator
