@@ -51,9 +51,11 @@ module CDQ
     case obj
     when Class
       if obj.isSubclassOfClass(NSManagedObject)
+        entities = NSDictionary.dictionaryWithDictionary(
+          @@base_object.models.current.entitiesByName)
         entity_description =
-          @@base_object.models.current.entitiesByName[obj.name] ||
-          @@base_object.models.current.entitiesByName[obj.ancestors[1].name]
+          entities[obj.name] ||
+          entities[obj.ancestors[1].name]
         if entity_description.nil?
           raise "Cannot find an entity named #{obj.name}"
         end
