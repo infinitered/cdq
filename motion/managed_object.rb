@@ -63,7 +63,11 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     end
 
     def respond_to?(name)
-      super || cdq.respond_to?(name)
+      if cdq_initialized?
+        super(name) || cdq.respond_to?(name)
+      else
+        super(name)
+      end
     end
 
     def destroy_all
@@ -75,6 +79,18 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     def destroy_all!
       destroy_all
       cdq.save
+    end
+
+    def cdq(obj = nil)
+      if obj
+        super(obj)
+      else
+        @cdq_object ||= super(nil)
+      end
+    end
+
+    def cdq_initialized?
+      !@cdq_object.nil?
     end
 
   end

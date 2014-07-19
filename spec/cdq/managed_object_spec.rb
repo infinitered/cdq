@@ -42,6 +42,12 @@ module CDQ
       Writer.all.array.should == []
     end
 
+    it "does not crash when respond_to? called on CDQManagedObject directly" do
+      should.not.raise do
+        CDQManagedObject.respond_to?(:foo)
+      end
+    end
+
     it "can destroy all instances of itself" do
       cdq(Writer).create(name: 'Dean Kuntz')
       cdq(Writer).create(name: 'Stephen King')
