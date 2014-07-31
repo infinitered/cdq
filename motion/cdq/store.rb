@@ -9,9 +9,16 @@ module CDQ
 
     def initialize(opts = {})
       @config = opts[:config] || CDQConfig.default
+      @model_manager = opts[:model_manager]
+    end
+    
+    def new(opts = {})
+      @config = opts[:config] || CDQConfig.default
       @model_manager = opts[:model_manager] || CDQ.cdq.models
       @icloud = opts[:icloud] || opts[:iCloud] || @config.icloud
       @icloud_container = @config.icloud_container
+      CDQ.cdq.stores = self
+      self
     end
 
     def current

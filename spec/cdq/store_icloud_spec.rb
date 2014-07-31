@@ -3,8 +3,7 @@ module CDQ
   describe "CDQ Store Manager with iCloud" do
 
     before do
-      @sm = CDQStoreManager.new(iCloud:true, container: "blah")
-      CDQ.cdq.setup(stores:@sm)
+      @sm = CDQ.cdq.stores.new(iCloud:true, container: "blah")
     end
 
     after do

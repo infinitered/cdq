@@ -12,6 +12,11 @@ module CDQ
     def stores
       @@store_manager ||= CDQStoreManager.new(model_manager: models)
     end
+    
+    def stores= stores
+      @@store_manager = stores
+      contexts.new(NSMainQueueConcurrencyType)
+    end
 
     def models
       @@model_manager ||= CDQModelManager.new
@@ -28,8 +33,6 @@ module CDQ
       if opts[:context]
         contexts.push(opts[:context])
         return true
-      elsif opts[:stores]
-        @@store_manager = opts[:stores]
       elsif opts[:store]
         stores.current = opts[:store]
       elsif opts[:model]
