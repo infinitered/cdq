@@ -9,7 +9,9 @@ module CDQ
 
     def initialize(opts = {})
       @config = opts[:config] || CDQConfig.default
-      @model_manager = opts[:model_manager]
+      @model_manager = opts[:model_manager] || CDQ.cdq.models
+      @icloud = opts[:icloud] || opts[:iCloud] || @config.icloud
+      @icloud_container = @config.icloud_container
     end
 
     def current
@@ -30,7 +32,7 @@ module CDQ
       if invalid?
         raise "No model found.  Can't create a persistent store coordinator without it."
       else
-        if @config.icloud
+        if @icloud
           create_icloud_store
         else
           create_local_store
@@ -44,7 +46,7 @@ module CDQ
       Dispatch::Queue.concurrent.async {
         # get icloud first container
         url = @config.database_url
-        icloud_url = NSFileManager.defaultManager.URLForUbiquityContainerIdentifier(@config.icloud_container)
+        icloud_url = NSFileManager.defaultManager.URLForUbiquityContainerIdentifier(@icloud_container)
         if icloud_url
           error = Pointer.new(:object)
           icloud_url = icloud_url.URLByAppendingPathComponent("data")

@@ -28,6 +28,8 @@ module CDQ
       if opts[:context]
         contexts.push(opts[:context])
         return true
+      elsif opts[:stores]
+        @@store_manager = opts[:stores]
       elsif opts[:store]
         stores.current = opts[:store]
       elsif opts[:model]
