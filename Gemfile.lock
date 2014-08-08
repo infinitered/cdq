@@ -1,18 +1,18 @@
 PATH
   remote: .
   specs:
-    cdq (0.1.9)
+    cdq (0.1.10)
       motion-yaml
-      ruby-xcdm (~> 0.0, >= 0.0.6)
+      ruby-xcdm (~> 0.0, >= 0.0.7)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (3.2.18)
+    activesupport (3.2.19)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     builder (3.2.2)
-    i18n (0.6.9)
+    i18n (0.6.11)
     motion-stump (0.3.2)
     motion-yaml (1.2)
     multi_json (1.10.1)
