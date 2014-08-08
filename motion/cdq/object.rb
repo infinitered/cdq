@@ -12,20 +12,15 @@ module CDQ
     def stores
       @@store_manager ||= CDQStoreManager.new(model_manager: models)
     end
-    
-    def stores= stores
-      @@store_manager = stores
-      contexts.new(NSMainQueueConcurrencyType)
-    end
 
     def models
       @@model_manager ||= CDQModelManager.new
     end
 
     def reset!(opts = {})
-      @@context_manager.reset!
+      @@context_manager.reset! if @@context_manager
       @@context_manager = nil
-      @@store_manager.reset!
+      @@store_manager.reset! if @@store_manager
       @@store_manager = nil
     end
 

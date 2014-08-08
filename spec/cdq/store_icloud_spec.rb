@@ -3,7 +3,8 @@ module CDQ
   describe "CDQ Store Manager with iCloud" do
 
     before do
-      @sm = CDQ.cdq.stores.new(iCloud:true, container: "blah")
+      CDQ.cdq.stores.new(iCloud:true, container: "blah")
+      @sm = CDQ.cdq.stores
     end
 
     after do
@@ -14,7 +15,7 @@ module CDQ
       @sm.current.should == CDQ.cdq.stores.current
       CDQ.cdq.stores.current.class.should == NSPersistentStoreCoordinator
     end
-    
+
   end
 
 end

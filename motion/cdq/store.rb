@@ -11,14 +11,12 @@ module CDQ
       @config = opts[:config] || CDQConfig.default
       @model_manager = opts[:model_manager]
     end
-    
+
     def new(opts = {})
       @config = opts[:config] || CDQConfig.default
       @model_manager = opts[:model_manager] || CDQ.cdq.models
       @icloud = opts[:icloud] || opts[:iCloud] || @config.icloud
       @icloud_container = @config.icloud_container
-      CDQ.cdq.stores = self
-      self
     end
 
     def current
@@ -46,10 +44,10 @@ module CDQ
         end
       end
     end
-    
+
     def create_icloud_store
       coordinator = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(@model_manager.current)
-      
+
       Dispatch::Queue.concurrent.async {
         # get icloud first container
         url = @config.database_url
@@ -70,7 +68,7 @@ module CDQ
                                                      options:options,
                                                      error:error)
           coordinator.unlock
-          
+
           if store.nil?
             error[0].userInfo['metadata'] && error[0].userInfo['metadata'].each do |key, value|
               NSLog "#{key}: #{value}"
@@ -104,7 +102,7 @@ module CDQ
       }
       coordinator
     end
-    
+
     def create_local_store
       coordinator = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(@model_manager.current)
       error = Pointer.new(:object)
@@ -130,7 +128,7 @@ module CDQ
       }
       coordinator
     end
-    
+
     def mkdir_p dir
       error = Pointer.new(:object)
       m = NSFileManager.defaultManager
@@ -140,7 +138,7 @@ module CDQ
         raise error[0].localizedDescription
       end
     end
-    
+
   end
 
 end
