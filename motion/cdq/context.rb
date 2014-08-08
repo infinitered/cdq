@@ -1,12 +1,17 @@
-
 module CDQ
 
   class CDQContextManager
 
     BACKGROUND_SAVE_NOTIFICATION = 'com.infinitered.cdq.context.background_save_completed'
+    DID_FINISH_IMPORT_NOTIFICATION = 'com.infinitered.cdq.context.did_finish_import'
 
     def initialize(opts = {})
       @store_manager = opts[:store_manager]
+    end
+    
+    def dealloc
+      NSNotificationCenter.defaultCenter.removeObserver(self) if @observed_context
+      super
     end
 
     # Push a new context onto the stack for the current thread, making that context the
@@ -66,6 +71,7 @@ module CDQ
     #
     def new(concurrency_type, &block)
       @has_been_set_up = true
+      
       context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
       if current
         context.parentContext = current
@@ -73,7 +79,15 @@ module CDQ
         if @store_manager.invalid?
           raise "store coordinator not found. Cannot create the first context without one."
         else
-          context.persistentStoreCoordinator = @store_manager.current
+          context.mergePolicy = NSMergePolicy.alloc.initWithMergeType(NSMergeByPropertyObjectTrumpMergePolicyType)
+          context.performBlockAndWait ->{
+            coordinator = @store_manager.current
+            context.persistentStoreCoordinator = coordinator
+            #Dispatch::Queue.main.async {
+            NSNotificationCenter.defaultCenter.addObserver(self, selector:"did_finish_import:", name:NSPersistentStoreDidImportUbiquitousContentChangesNotification, object:nil)
+            @observed_context = context
+            #}
+          }
         end
       end
       push(context, &block)
@@ -126,6 +140,15 @@ module CDQ
       end
       true
     end
+    
+
+    def did_finish_import(notification)
+      @observed_context.performBlockAndWait ->{
+        @observed_context.mergeChangesFromContextDidSaveNotification(notification)
+        NSNotificationCenter.defaultCenter.postNotificationName(DID_FINISH_IMPORT_NOTIFICATION, object:self, userInfo:{context: @observed_context})
+      }
+    end
+
 
     private
 
@@ -200,6 +223,6 @@ module CDQ
       end
     end
 
-end
+  end
 
 end

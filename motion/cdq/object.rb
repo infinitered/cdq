@@ -12,6 +12,11 @@ module CDQ
     def stores
       @@store_manager ||= CDQStoreManager.new(model_manager: models)
     end
+    
+    def stores= stores
+      @@store_manager = stores
+      contexts.new(NSMainQueueConcurrencyType)
+    end
 
     def models
       @@model_manager ||= CDQModelManager.new
