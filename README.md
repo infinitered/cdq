@@ -322,6 +322,18 @@ defining and using named scopes:
 query generator for an entity, but `cdq(:attribute)` starts a predicate for an
 attribute.
 
+## iCloud
+
+As of version 0.1.10, there is some experimental support for iCloud, written by
+@katsuyoshi.  Please try it out and let us know how it's working for you.  To
+enable, initialize like this:
+
+```ruby
+  cdq.stores.new(iCloud: true, container: "com.your.container.id")
+```
+
+You can also set up iCloud in your cdq.yml file. 
+
 ## Documentation
 
 * [API](http://rubydoc.info/github/infinitered/cdq)
