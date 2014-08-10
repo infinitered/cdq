@@ -214,7 +214,8 @@ list.
   Author.where(:name).eq('Shakespeare')
   Author.where(:publish_count).gt(10)
   Author.where(name: 'Shakespeare', publish_count: 15)
-  Author.where("name LIKE '%@'", '%kesp%')
+  Author.where("name LIKE '%@'", '*kesp*')
+  Author.where("name LIKE '%@'", 'Shakespear?')
 ```
 
 ### Sorts, Limits and Offsets
