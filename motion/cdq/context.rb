@@ -69,12 +69,12 @@ module CDQ
     # will be set to the previous head context.  If a block is supplied, the new context
     # will exist for the duration of the block and then the previous state will be restore_managerd.
     #
-    def new(concurrency_type, parent = nil, &block)
+    def new(concurrency_type, &block)
       @has_been_set_up = true
       
       context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
-      if parent || current
-        context.parentContext = parent || current
+      if current
+        context.parentContext = current
       else
         if @store_manager.invalid?
           raise "store coordinator not found. Cannot create the first context without one."
