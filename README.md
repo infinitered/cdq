@@ -174,6 +174,13 @@ all the data over to your main context all at once.  CDQ makes that easy too:
   cdq.save
 ```
 
+### Reading
+
+```ruby
+  author = Author.create(name: "Le Guin", publish_count: 150, first_published: 1970)
+  author.attributes # => { "name" => "Le Guin", "publish_count" => 150, "first_published" => 1970 }
+```
+
 ### Updating
 ```ruby
   author = Author.first
@@ -332,7 +339,7 @@ enable, initialize like this:
   cdq.stores.new(iCloud: true, container: "com.your.container.id")
 ```
 
-You can also set up iCloud in your cdq.yml file. 
+You can also set up iCloud in your cdq.yml file.
 
 ## Documentation
 

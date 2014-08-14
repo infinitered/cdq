@@ -73,6 +73,11 @@ module CDQ
       eec.articles.sort_by(:title).first.should == art
     end
 
+    it "returns a hash of attributes" do
+      john = cdq(Writer).create(fee: 21.2, name: 'John Grisham')
+      john.attributes.should == { "fee" => 21.2, "name" => 'John Grisham' }
+    end
+
     describe "respond_to?" do
 
       before do
