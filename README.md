@@ -178,6 +178,8 @@ all the data over to your main context all at once.  CDQ makes that easy too:
 
 ```ruby
   author = Author.create(name: "Le Guin", publish_count: 150, first_published: 1970)
+  author.name # => "Le Guin"
+  author.publish_count # => 150
   author.attributes # => { "name" => "Le Guin", "publish_count" => 150, "first_published" => 1970 }
 ```
 
