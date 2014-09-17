@@ -53,8 +53,10 @@ module CDQ
       if obj.isSubclassOfClass(NSManagedObject)
         entities = NSDictionary.dictionaryWithDictionary(
           @@base_object.models.current.entitiesByName)
+        entity_name = obj.name.split("::").last
+        # NOTE attempt to look up the entity
         entity_description =
-          entities[obj.name] ||
+          entities[entity_name] ||
           entities[obj.ancestors[1].name]
         if entity_description.nil?
           raise "Cannot find an entity named #{obj.name}"
