@@ -106,6 +106,15 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     description
   end
 
+  # Returns a hash of attributes for the object
+  def attributes
+    h = {}
+    entity.attributesByName.each do |name, desc|
+      h[name] = send name
+    end
+    h
+  end
+
   def log(log_type = nil)
     out = "\nOID: "
     out << oid
