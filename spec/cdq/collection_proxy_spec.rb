@@ -45,12 +45,11 @@ module CDQ
       q.count.should == 3
       q.array.should == [1,4,5].map { |i| @articles[i] }.sort_by(&:title)
     end
-    
-    it "allows you to grab count with size and lenght aliases" do
-      q = @cp.where(:title).contains(" of ").sort_by(:title)
-      q.count.should == 3
-      q.size.should == 3
-      q.length.should == 3
+
+    it "allows you to grab count with size and length aliases" do
+      @author.articles.count.should == 7
+      @author.articles.size.should == 7
+      @author.articles.length.should == 7
     end
 
   end
