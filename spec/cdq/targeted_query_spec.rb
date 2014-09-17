@@ -22,6 +22,8 @@ module CDQ
       tq.count.should == 1
       Author.create(name: "T. S. Eliot")
       tq.count.should == 2
+      tq.size.should == 2
+      tq.length.should == 2
     end
 
     it "can fetch objects" do

@@ -46,6 +46,12 @@ module CDQ
       q.array.should == [1,4,5].map { |i| @articles[i] }.sort_by(&:title)
     end
 
+    it "allows you to grab count with size and length aliases" do
+      @author.articles.count.should == 7
+      @author.articles.size.should == 7
+      @author.articles.length.should == 7
+    end
+
   end
 end
 

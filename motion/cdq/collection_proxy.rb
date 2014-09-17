@@ -11,6 +11,8 @@ module CDQ
     def count
       @objects.size
     end
+    alias :length :count
+    alias :size :count
 
     def get
       @objects

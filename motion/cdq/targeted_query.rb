@@ -36,6 +36,8 @@ module CDQ #:nodoc:
         context.countForFetchRequest(fetch_request, error:error)
       end
     end
+    alias :length :count
+    alias :size :count
 
     # Return all matching entities.
     #
