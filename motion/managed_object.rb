@@ -81,6 +81,10 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
       cdq.save
     end
 
+    def attribute_names
+      self.entity_description.attributesByName.keys
+    end
+
     def cdq(obj = nil)
       if obj
         super(obj)
