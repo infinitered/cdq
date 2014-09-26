@@ -1,4 +1,3 @@
-
 module CDQ
   describe "CDQ Managed Object" do
 
@@ -40,6 +39,10 @@ module CDQ
       eec = cdq(Writer).create(name: 'eecummings')
       eec.destroy
       Writer.all.array.should == []
+    end
+
+    it "returns the attributes of the entity" do
+      Writer.attribute_names.should.include(:name)
     end
 
     it "does not crash when respond_to? called on CDQManagedObject directly" do
