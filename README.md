@@ -9,10 +9,15 @@ XCode, or you can use [ruby-xcdm](https://github.com/infinitered/ruby-xcdm).
 [![Build Status](https://travis-ci.org/infinitered/cdq.png?branch=master)](https://travis-ci.org/infinitered/cdq)
 [![Gem Version](https://badge.fury.io/rb/cdq.png)](http://badge.fury.io/rb/cdq)
 
-## Introduction
+## Get Started
+1. [Introducing CDQ](#introducingCDQ)
+2. [Greenfield Quick Start Tutorial](https://github.com/infinitered/cdq/wiki/Greenfield-Quick-Start)
+3. [Cheat Sheet](https://github.com/infinitered/cdq/wiki/CDQ-Cheat-Sheet)
+4. [API docs](http://rubydoc.info/github/infinitered/cdq)
 
-CDQ began its life as a fork of
-[MotionData](https://github.com/alloy/MotionData), but it became obvious I
+## Introducing CDQ
+
+CDQ began its life as a fork of [MotionData](https://github.com/alloy/MotionData), but it became obvious I
 wanted to take things in a different direction, so I cut loose and ended up
 rewriting almost everything.  If you pay attention, you can still find the
 genetic traces, so thanks to @alloy for sharing his work and letting me learn
@@ -34,17 +39,6 @@ schema as it grows, if you can follow a few [simple rules](https://developer.app
 
 ## Installing
 
-### Quick Start:
-
-For brand-new apps, or just to try it out, check out the
-[Greenfield Quick Start](https://github.com/infinitered/cdq/wiki/Greenfield-Quick-Start) tutorial.
-There's also a
-[Cheat Sheet](https://github.com/infinitered/cdq/wiki/CDQ-Cheat-Sheet)
-and
-[API docs](http://rubydoc.info/github/infinitered/cdq).
-
-### Even Quicker Start:
-
 ```bash
 $ gem install cdq
 $ motion create my_app # if needed
@@ -59,7 +53,7 @@ This way assumes you want to use ruby-xcdm.  Run ```cdq -h``` for list of more g
 ```ruby
 gem 'cdq'
 ```
-
+<br />
 If you want to see bleeding-edge changes, point Bundler at the git repo:
 
 ```ruby
@@ -213,9 +207,7 @@ All of these queries are infinitely daisy-chainable, and almost everything is
 possible to do using only chained methods, no need to drop into NSPredicate format
 strings unless you want to.
 
-Here are some examples.  See the [cheat
-sheet](https://github.com/infinitered/cdq/wiki/CDQ-Cheat-Sheet) for a complete
-list.
+Here are some examples.  **See the [cheat sheet](https://github.com/infinitered/cdq/wiki/CDQ-Cheat-Sheet) for a complete list.**
 
 ### Conditions
 
