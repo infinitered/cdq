@@ -348,3 +348,12 @@ You can also set up iCloud in your cdq.yml file.
 * There are no explicit validations (but you can define them on your data model)
 * Lifecycle Callbacks or Observers
 
+## Tips
+
+If you need, you could watch SQL statements by setting the following launch argument through `args` environment variable:
+
+```
+$ rake args='-com.apple.CoreData.SQLDebug 3'
+```
+
+`com.apple.CoreData.SQLDebug` takes a value between 1 and 3; the higher the value, the more verbose the output.
