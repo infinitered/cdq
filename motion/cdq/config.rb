@@ -69,7 +69,6 @@ module CDQ
       end
 
       path = File.join(dir, database_name + '.sqlite')
-      puts path
       NSURL.fileURLWithPath(path)
     end
 
