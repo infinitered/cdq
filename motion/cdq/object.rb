@@ -33,7 +33,7 @@ module CDQ
       elsif opts[:model]
         models.current = opts[:model]
       end
-      contexts.new(NSMainQueueConcurrencyType)
+      contexts.push(NSMainQueueConcurrencyType)
       true
     end
 

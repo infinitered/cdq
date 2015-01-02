@@ -2,13 +2,15 @@ module CDQ
 
   class CDQContextManager
 
+    include Deprecation
+
     BACKGROUND_SAVE_NOTIFICATION = 'com.infinitered.cdq.context.background_save_completed'
     DID_FINISH_IMPORT_NOTIFICATION = 'com.infinitered.cdq.context.did_finish_import'
 
     def initialize(opts = {})
       @store_manager = opts[:store_manager]
     end
-    
+
     def dealloc
       NSNotificationCenter.defaultCenter.removeObserver(self) if @observed_context
       super
@@ -20,10 +22,16 @@ module CDQ
     #
     def push(context, &block)
       @has_been_set_up = true
+
+      if context.is_a? Fixnum
+        context = create(context)
+      end
+
       if block_given?
         save_stack do
-          push_to_stack(context)
+          context = push_to_stack(context)
           block.call
+          context
         end
       else
         push_to_stack(context)
@@ -38,6 +46,7 @@ module CDQ
         save_stack do
           rval = pop_from_stack
           block.call
+          rval
         end
       else
         pop_from_stack
@@ -48,7 +57,7 @@ module CDQ
     #
     def current
       if stack.empty? && !@has_been_set_up
-        new(NSMainQueueConcurrencyType)
+        push(NSMainQueueConcurrencyType)
       end
       stack.last
     end
@@ -69,13 +78,22 @@ module CDQ
     # will be set to the previous head context.  If a block is supplied, the new context
     # will exist for the duration of the block and then the previous state will be restore_managerd.
     #
+    # REMOVE1.1
+    #
     def new(concurrency_type, &block)
+      deprecate "cdq.contexts.new() is deprecated.  Use push() or create()"
+      context = create(concurrency_type)
+      push(context, &block)
+    end
+
+    # Create a new context by type, setting upstream to the topmost context if available,
+    # or to the persistent store coordinator if not.  Return the context but do NOT push it
+    # onto the stack.
+    #
+    def create(concurrency_type, &block)
       @has_been_set_up = true
-      
       context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
-      if current
-        context.parentContext = current
-      else
+      if stack.empty?
         if @store_manager.invalid?
           raise "store coordinator not found. Cannot create the first context without one."
         else
@@ -89,8 +107,10 @@ module CDQ
             #}
           }
         end
+      else
+        context.parentContext = stack.last
       end
-      push(context, &block)
+      context
     end
 
     # Save all contexts in the stack, starting with the current and working down.
@@ -140,7 +160,6 @@ module CDQ
       end
       true
     end
-    
 
     def did_finish_import(notification)
       @observed_context.performBlockAndWait ->{
@@ -213,7 +232,7 @@ module CDQ
         end
       end
     end
-    
+
     def set_timestamps
       now = Time.now
       eos = current.insertedObjects.allObjects + current.updatedObjects.allObjects
