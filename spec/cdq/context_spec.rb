@@ -69,10 +69,10 @@ module CDQ
     end
 
     it "can create a new context and push it to the top of the stack" do
-      first = @cc.push(NSPrivateQueueConcurrencyType)
+      first = @cc.push(:private)
       @cc.current.should == first
       @cc.current.persistentStoreCoordinator.should.not == nil
-      second = @cc.push(NSMainQueueConcurrencyType)
+      second = @cc.push(:main)
       @cc.current.should == second
       @cc.current.parentContext.should == first
     end

@@ -23,7 +23,7 @@ module CDQ
     def push(context, options = {}, &block)
       @has_been_set_up = true
 
-      if context.is_a? Fixnum
+      unless context.is_a? NSManagedObjectContext
         context = create(context, options)
       end
 
@@ -92,7 +92,16 @@ module CDQ
     #
     def create(concurrency_type, options = {}, &block)
       @has_been_set_up = true
-      context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
+
+      case concurrency_type
+      when :main
+        context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSMainQueueConcurrencyType)
+      when :private_queue, :private
+        context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSPrivateQueueConcurrencyType)
+      else
+        context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
+      end
+
       if stack.empty?
         if @store_manager.invalid?
           raise "store coordinator not found. Cannot create the first context without one."
