@@ -97,6 +97,19 @@ module CDQ
       @cc.current.should == nil
     end
 
+    it "can create named contexts" do
+      first = @cc.create(NSPrivateQueueConcurrencyType, named: :special)
+      @cc.special.should == first
+    end
+
+    it "can run code on foreign contexts" do
+      @cc.create(NSPrivateQueueConcurrencyType, named: :foreign)
+      @cc.foreign.should.not == nil
+      @cc.on(:foreign) do
+        @cc.all.should == []
+      end
+    end
+
     it "saves all contexts" do
       root = @cc.push(NSPrivateQueueConcurrencyType)
       main = @cc.push(NSMainQueueConcurrencyType)
