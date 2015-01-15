@@ -3,10 +3,7 @@ module CDQ
 
   class CDQRelationshipQuery < CDQTargetedQuery
 
-@@g_count = 0
-
     def initialize(owner, name, set = nil, opts = {})
-@@g_count += 1
       @owner = owner ? WeakRef.new(owner) : nil
       @relationship_name = name
       @set = set ? WeakRef.new(set) : nil
@@ -30,9 +27,6 @@ module CDQ
     end
     
     def dealloc
-@@g_count -= 1
-p "*** #{@@g_count} #{@relationship_name} ***"
-p self.class
       super
     end
 
