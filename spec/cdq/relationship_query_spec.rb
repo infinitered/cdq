@@ -20,6 +20,7 @@ module CDQ
 
     after do
       cdq.reset!
+      @rq = nil
     end
 
     it "performs queries against the target entity" do

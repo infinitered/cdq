@@ -3,10 +3,13 @@ module CDQ
 
   class CDQRelationshipQuery < CDQTargetedQuery
 
+@@g_count = 0
+
     def initialize(owner, name, set = nil, opts = {})
-      @owner = owner
+@@g_count += 1
+      @owner = owner ? WeakRef.new(owner) : nil
       @relationship_name = name
-      @set = set
+      @set = set ? WeakRef.new(set) : nil
       relationship = owner.entity.relationshipsByName[name]
       if relationship.isToMany
         if @owner.ordered_set?(name)
@@ -20,10 +23,17 @@ module CDQ
       target_class = constantize(entity_description.managedObjectClassName)
       super(entity_description, target_class, opts)
       if @inverse_rel.isToMany
-        @predicate = self.where(@inverse_rel.name.to_sym).contains(@owner).predicate
+        @predicate = self.where(@inverse_rel.name.to_sym).contains(owner).predicate
       else
         @predicate = self.where(@inverse_rel.name.to_sym => @owner).predicate
       end
+    end
+    
+    def dealloc
+@@g_count -= 1
+p "*** #{@@g_count} #{@relationship_name} ***"
+p self.class
+      super
     end
 
     # Creates a new managed object within the target relationship
