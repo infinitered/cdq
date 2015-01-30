@@ -28,7 +28,7 @@ avoiding too much abstraction or method pollution on top of the SDK.  While it
 borrows many ideas from ActiveRecord (especially AREL), it is designed to
 harmonize with Core Data's way of doing things first.
 
-I am actively developing and improving CDQ (updated September 2014) so if you have
+I am actively developing and improving CDQ (updated February 2015) so if you have
 trouble or find a bug, please open a ticket!
 
 ### Why use a static Data Model?
