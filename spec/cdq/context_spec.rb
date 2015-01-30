@@ -115,11 +115,28 @@ module CDQ
       main = @cc.push(NSMainQueueConcurrencyType)
       root_saved = false
       main_saved = false
+
       root.stub!(:save) { root_saved = true }
       main.stub!(:save) { main_saved = true }
+
       @cc.save(always_wait: true)
 
       root_saved.should == true
+      main_saved.should == true
+    end
+
+    it "saves specific contexts" do
+      root = @cc.push(NSPrivateQueueConcurrencyType)
+      main = @cc.push(NSMainQueueConcurrencyType)
+      root_saved = false
+      main_saved = false
+
+      root.stub!(:save) { root_saved = true }
+      main.stub!(:save) { main_saved = true }
+
+      @cc.save(main, always_wait: true)
+
+      root_saved.should == false
       main_saved.should == true
     end
 

@@ -131,13 +131,38 @@ module CDQ
       context
     end
 
-    # Save all contexts in the stack, starting with the current and working down.
+    # Save all passed contexts in order.  If none are supplied, save all
+    # contexts in the stack, starting with the current and working down.
     #
-    def save(options = {})
+    # Options:
+    #
+    #   always_wait: If true, force use of performBlockAndWait for synchronous
+    #     saves.  By default, private queue saves are performed asynchronously.
+    #     Main queue saves are always synchronous if performed from the main
+    #     queue.
+    #
+    def save(*contexts_and_options)
+
+      if contexts_and_options.last.is_a? Hash
+        options = contexts_and_options.pop
+      else
+        options = {}
+      end
+
+      if contexts_and_options.empty?
+        contexts = stack.reverse
+      else
+        contexts = contexts_and_options
+      end
+
       set_timestamps
       always_wait = options[:always_wait]
-      stack.reverse.each do |context|
-        if always_wait || context.concurrencyType == NSMainQueueConcurrencyType
+      contexts.each do |context|
+        if context.concurrencyType == NSMainQueueConcurrencyType && NSThread.isMainThread
+          with_error_object do |error|
+            context.save(error)
+          end
+        elsif always_wait
           context.performBlockAndWait( -> {
 
             with_error_object do |error|
