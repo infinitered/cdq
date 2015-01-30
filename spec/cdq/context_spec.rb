@@ -140,6 +140,17 @@ module CDQ
       main_saved.should == true
     end
 
+    it "saves contexts by name" do
+      main = @cc.push(:main, named: :main)
+
+      main_saved = false
+
+      main.stub!(:save) { main_saved = true }
+
+      @cc.save(:main)
+
+      main_saved.should == true
+    end
   end
 
 end

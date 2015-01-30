@@ -132,7 +132,9 @@ module CDQ
     end
 
     # Save all passed contexts in order.  If none are supplied, save all
-    # contexts in the stack, starting with the current and working down.
+    # contexts in the stack, starting with the current and working down.  If
+    # you pass a symbol instead of a context, it will look up context with
+    # that name.
     #
     # Options:
     #
@@ -152,7 +154,14 @@ module CDQ
       if contexts_and_options.empty?
         contexts = stack.reverse
       else
-        contexts = contexts_and_options
+        # resolve named contexts
+        contexts = contexts_and_options.map do |c|
+          if c.is_a? Symbol
+            send(c)
+          else
+            c
+          end
+        end
       end
 
       set_timestamps
