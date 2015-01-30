@@ -10,6 +10,8 @@ module CDQ
     end
 
     after do
+      @cc.class.send(:undef_method, :main) if @cc.respond_to?(:main)
+      @cc.class.send(:undef_method, :root) if @cc.respond_to?(:root)
       CDQ::Deprecation.silence_deprecation = false
       CDQ.cdq.reset!
     end
@@ -150,6 +152,14 @@ module CDQ
       @cc.save(:main)
 
       main_saved.should == true
+    end
+
+    it "automatically gives names to :root and :main contexts" do
+      @cc.push(:root)
+      @cc.push(:main)
+
+      @cc.should.respond_to :root
+      @cc.should.respond_to :main
     end
   end
 

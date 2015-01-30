@@ -90,14 +90,24 @@ module CDQ
     # or to the persistent store coordinator if not.  Return the context but do NOT push it
     # onto the stack.
     #
+    # Options:
+    #
+    #   :named - Assign the context a name, making it available as cdq.contexts.<name>.  The
+    #     name is permanent, and should only be used for contexts that are intended to be global,
+    #     since the object will never get released.
+    #
     def create(concurrency_type, options = {}, &block)
       @has_been_set_up = true
 
       case concurrency_type
       when :main
         context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSMainQueueConcurrencyType)
+        options[:named] = :main unless options.has_key?(:named)
       when :private_queue, :private
         context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSPrivateQueueConcurrencyType)
+      when :root
+        context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSPrivateQueueConcurrencyType)
+        options[:named] = :root unless options.has_key?(:named)
       else
         context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
       end
