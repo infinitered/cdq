@@ -41,6 +41,10 @@ module CDQ
       contexts.save(*args)
     end
 
+    def background(*args, &block)
+      contexts.background(*args, &block)
+    end
+
     def find(oid)
       url = NSURL.URLWithString(oid)
       object_id = stores.current.managedObjectIDForURIRepresentation(url)
