@@ -53,7 +53,7 @@ This way assumes you want to use ruby-xcdm.  Run `cdq -h` for list of more gener
 ```ruby
 gem 'cdq'
 ```
-<br />
+
 If you want to see bleeding-edge changes, point Bundler at the git repo:
 
 ```ruby
