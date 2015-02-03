@@ -17,7 +17,8 @@ XCode, or you can use [ruby-xcdm](https://github.com/infinitered/ruby-xcdm).
 
 ## Introducing CDQ
 
-CDQ began its life as a fork of [MotionData](https://github.com/alloy/MotionData), but it became obvious I
+CDQ began its life as a fork of
+[MotionData](https://github.com/alloy/MotionData), but it became obvious I
 wanted to take things in a different direction, so I cut loose and ended up
 rewriting almost everything.  If you pay attention, you can still find the
 genetic traces, so thanks to @alloy for sharing his work and letting me learn
