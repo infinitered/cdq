@@ -68,7 +68,7 @@ it to your resources file and make sure it's named the same as your RubyMotion
 project.  If you're using `ruby-xcdm` (which I highly recommend) then it will
 create the datamodel file automatically and put it in the right place.
 
-Now include the setup code in your ```app_delegate.rb``` file:
+Now include the setup code in your `app_delegate.rb` file:
 
 ```ruby
 class AppDelegate
