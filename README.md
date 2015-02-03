@@ -305,7 +305,7 @@ name, You'll need to use a <tt>cdq.yml</tt> config file.  See
 ### Working without model classes using the master method
 
 If you need or want to work without using CDQManagedObject as your base class,
-you can use the ``dq()``master method.  This is a "magic" method, like
+you can use the `cdq()`master method.  This is a "magic" method, like
 `rmq()` in [RubyMotionQuery](http://github.com/infinitered/rmq) or
 `$()` in jQuery, which will lift whatever you pass into it into the CDQ
 universe. The method is available inside all UIResponder classes (so, views and
