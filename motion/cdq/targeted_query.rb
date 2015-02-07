@@ -89,7 +89,7 @@ module CDQ #:nodoc:
       array.each(*args, &block)
     end
 
-    # Calculates the sum of values on a given column.
+    # Calculation method based on core data aggregate functions.
     def calculate(operation, column_name)
       raise("No context has been set.  Probably need to run cdq.setup") unless context
       raise("Cannot find attribute #{column_name} while calculating #{operation}") unless @entity_description.attributesByName[column_name.to_s]
