@@ -242,6 +242,16 @@ Here are some examples.  **See the [cheat sheet](https://github.com/infinitered/
   Author.where(:name).contains("Emily").and(cdq(:pub_count).gt(100).or.lt(10))
 ```
 
+### Calculations
+
+```ruby
+  Author.sum(:fee)
+  Author.average(:fee)
+  Author.min(:fee)
+  Author.max(:fee)
+  Author.where(:name).eq("Emily").sum(:fee)
+```
+
 ### Fetching
 
 Like ActiveRecord, CDQ will not run a fetch until you actually request specific

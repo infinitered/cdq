@@ -89,6 +89,57 @@ module CDQ #:nodoc:
       array.each(*args, &block)
     end
 
+    # Calculates the sum of values on a given column.
+    def calculate(operation, column_name)
+      raise("No context has been set.  Probably need to run cdq.setup") unless context
+      raise("Cannot find attribute #{column_name} while calculating #{operation}") unless @entity_description.attributesByName[column_name.to_s]
+      desc_name = operation.to_s + '_of_' + column_name.to_s
+      fr = fetch_request.tap do |req|
+        req.propertiesToFetch = [
+          NSExpressionDescription.alloc.init.tap do |desc|
+            desc.name = desc_name
+            desc.expression = NSExpression.expressionForFunction(operation.to_s + ':', arguments: [ NSExpression.expressionForKeyPath(column_name.to_s) ])
+            desc.expressionResultType = @entity_description.attributesByName[column_name.to_s].attributeType
+          end
+        ]
+        req.resultType = NSDictionaryResultType
+      end
+      with_error_object([]) do |error|
+        r = context.executeFetchRequest(fr, error:error)
+        r.first[desc_name]
+      end
+    end
+
+    # Calculates the sum of values on a given column. 
+    #
+    #   Author.sum(:fee) # => 6.0
+    def sum(column_name)
+      calculate(:sum, column_name)
+    end
+    
+    # Calculates the average of values on a given column. 
+    #
+    #   Author.average(:fee) # => 2.0
+    def average(column_name)
+      calculate(:average, column_name)
+    end
+
+    # Calculates the minimum of values on a given column. 
+    #
+    #   Author.min(:fee) # => 1.0
+    def min(column_name)
+      calculate(:min, column_name)
+    end
+    alias :minimum :min
+
+    # Calculates the maximum of values on a given column. 
+    #
+    #   Author.max(:fee) # => 3.0
+    def max(column_name)
+      calculate(:max, column_name)
+    end
+    alias :maximum :max
+
     # Returns the fully-contstructed fetch request, which can be executed outside of CDQ.
     #
     def fetch_request
