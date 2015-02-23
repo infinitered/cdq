@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cdq (1.0.0)
+    cdq (1.0.1)
       motion-yaml
       ruby-xcdm (~> 0.0, >= 0.0.8)
 

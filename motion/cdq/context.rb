@@ -2,7 +2,7 @@ module CDQ
 
   class CDQContextManager
 
-    include Deprecation
+    include CDQ::Deprecation
 
     BACKGROUND_SAVE_NOTIFICATION = 'com.infinitered.cdq.context.background_save_completed'
     DID_FINISH_IMPORT_NOTIFICATION = 'com.infinitered.cdq.context.did_finish_import'
