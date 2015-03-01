@@ -17,7 +17,8 @@ XCode, or you can use [ruby-xcdm](https://github.com/infinitered/ruby-xcdm).
 
 ## Introducing CDQ
 
-CDQ began its life as a fork of [MotionData](https://github.com/alloy/MotionData), but it became obvious I
+CDQ began its life as a fork of
+[MotionData](https://github.com/alloy/MotionData), but it became obvious I
 wanted to take things in a different direction, so I cut loose and ended up
 rewriting almost everything.  If you pay attention, you can still find the
 genetic traces, so thanks to @alloy for sharing his work and letting me learn
@@ -28,7 +29,7 @@ avoiding too much abstraction or method pollution on top of the SDK.  While it
 borrows many ideas from ActiveRecord (especially AREL), it is designed to
 harmonize with Core Data's way of doing things first.
 
-I am actively developing and improving CDQ (updated September 2014) so if you have
+I am actively developing and improving CDQ (updated February 2015) so if you have
 trouble or find a bug, please open a ticket!
 
 ### Why use a static Data Model?
@@ -46,14 +47,14 @@ $ cd my_app
 $ cdq init
 ```
 
-This way assumes you want to use ruby-xcdm.  Run ```cdq -h``` for list of more generators.
+This way assumes you want to use ruby-xcdm.  Run `cdq -h` for list of more generators.
 
 ### Using Bundler:
 
 ```ruby
 gem 'cdq'
 ```
-<br />
+
 If you want to see bleeding-edge changes, point Bundler at the git repo:
 
 ```ruby
@@ -67,7 +68,7 @@ it to your resources file and make sure it's named the same as your RubyMotion
 project.  If you're using `ruby-xcdm` (which I highly recommend) then it will
 create the datamodel file automatically and put it in the right place.
 
-Now include the setup code in your ```app_delegate.rb``` file:
+Now include the setup code in your `app_delegate.rb` file:
 
 ```ruby
 class AppDelegate
@@ -129,21 +130,24 @@ about contexts at all.
 For a great discussion of why you might want to use nested contexts, see [here](http://www.cocoanetics.com/2012/07/multi-context-coredata/).
 
 CDQ maintains a stack of contexts (one stack per thread), and by default, all
-operations on objects use the topmost context.  You just call ```cdq.save```
+operations on objects use the topmost context.  You just call `cdq.save`
 and it saves the whole stack.  Or you can get a list of all the contexts in
-order with ```cdq.contexts.all``` and do more precise work.
+order with `cdq.contexts.all` and do more precise work.
 
 Settings things up the way you want is easy.  Here's how you'd set it up for asynchronous
 saves:
 
 ```ruby
-  cdq.contexts.new(NSPrivateQueueConcurrencyType)
-  cdq.contexts.new(NSMainQueueConcurrencyType)
+  cdq.contexts.push(:root)
+  cdq.contexts.push(:main)
 ```
 
 This pushes a private queue context onto the bottom of the stack, then a main queue context on top of it.
-Since the main queue is on top, all your data operations will use that.  ```cdq.save``` then saves the
+Since the main queue is on top, all your data operations will use that.  `cdq.save` then saves the
 main context, and schedules a save on the root context.
+
+In addition, since these two contexts are globally important, it makes them available at `cdq.contexts.main` and
+`cdq.contexts.root`.
 
 ### Temporary Contexts
 
@@ -153,8 +157,11 @@ load into a temporary context (possibly in a background thread) and then move
 all the data over to your main context all at once.  CDQ makes that easy too:
 
 ```ruby
-  cdq.contexts.new(NSConfinementConcurrencyType) do
+  cdq.background do
+
     # Your work here
+
+    cdq.save
   end
 ```
 
@@ -247,12 +254,12 @@ Here are some examples.  **See the [cheat sheet](https://github.com/infinitered/
 Like ActiveRecord, CDQ will not run a fetch until you actually request specific
 objects.  There are several methods for getting at the data:
 
- * ```array```
- * ```first```
- * ```each```
- * ```[]```
- * ```map```
- * Anything else in ```Enumerable```
+ * `array`
+ * `first`
+ * `each`
+ * `[]`
+ * `map`
+ * Anything else in `Enumerable`
 
 ## Dedicated Models
 
@@ -299,12 +306,12 @@ name, You'll need to use a <tt>cdq.yml</tt> config file.  See
 ### Working without model classes using the master method
 
 If you need or want to work without using CDQManagedObject as your base class,
-you can use the ```cdq()``` master method.  This is a "magic" method, like
-```rmq()``` in [RubyMotionQuery](http://github.com/infinitered/rmq) or
-```$()``` in jQuery, which will lift whatever you pass into it into the CDQ
+you can use the `cdq()`master method.  This is a "magic" method, like
+`rmq()` in [RubyMotionQuery](http://github.com/infinitered/rmq) or
+`$()` in jQuery, which will lift whatever you pass into it into the CDQ
 universe. The method is available inside all UIResponder classes (so, views and
 controllers) as well as in the console.  You can use it anywhere else by
-including the model ```CDQ``` into your classes.  To use an entity without a
+including the model `CDQ` into your classes.  To use an entity without a
 model class, just pass its name as a string into the master method, like so
 
 ```ruby

@@ -2,13 +2,15 @@ module CDQ
 
   class CDQContextManager
 
+    include CDQ::Deprecation
+
     BACKGROUND_SAVE_NOTIFICATION = 'com.infinitered.cdq.context.background_save_completed'
     DID_FINISH_IMPORT_NOTIFICATION = 'com.infinitered.cdq.context.did_finish_import'
 
     def initialize(opts = {})
       @store_manager = opts[:store_manager]
     end
-    
+
     def dealloc
       NSNotificationCenter.defaultCenter.removeObserver(self) if @observed_context
       super
@@ -18,12 +20,18 @@ module CDQ
     # default. If a block is supplied, push for the duration of the block and then
     # return to the previous state.
     #
-    def push(context, &block)
+    def push(context, options = {}, &block)
       @has_been_set_up = true
+
+      unless context.is_a? NSManagedObjectContext
+        context = create(context, options)
+      end
+
       if block_given?
         save_stack do
-          push_to_stack(context)
+          context = push_to_stack(context)
           block.call
+          context
         end
       else
         push_to_stack(context)
@@ -38,6 +46,7 @@ module CDQ
         save_stack do
           rval = pop_from_stack
           block.call
+          rval
         end
       else
         pop_from_stack
@@ -48,7 +57,7 @@ module CDQ
     #
     def current
       if stack.empty? && !@has_been_set_up
-        new(NSMainQueueConcurrencyType)
+        push(NSMainQueueConcurrencyType)
       end
       stack.last
     end
@@ -69,13 +78,41 @@ module CDQ
     # will be set to the previous head context.  If a block is supplied, the new context
     # will exist for the duration of the block and then the previous state will be restore_managerd.
     #
+    # REMOVE1.1
+    #
     def new(concurrency_type, &block)
+      deprecate "cdq.contexts.new() is deprecated.  Use push() or create()"
+      context = create(concurrency_type)
+      push(context, {}, &block)
+    end
+
+    # Create a new context by type, setting upstream to the topmost context if available,
+    # or to the persistent store coordinator if not.  Return the context but do NOT push it
+    # onto the stack.
+    #
+    # Options:
+    #
+    #   :named - Assign the context a name, making it available as cdq.contexts.<name>.  The
+    #     name is permanent, and should only be used for contexts that are intended to be global,
+    #     since the object will never get released.
+    #
+    def create(concurrency_type, options = {}, &block)
       @has_been_set_up = true
-      
-      context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
-      if current
-        context.parentContext = current
+
+      case concurrency_type
+      when :main
+        context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSMainQueueConcurrencyType)
+        options[:named] = :main unless options.has_key?(:named)
+      when :private_queue, :private
+        context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSPrivateQueueConcurrencyType)
+      when :root
+        context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSPrivateQueueConcurrencyType)
+        options[:named] = :root unless options.has_key?(:named)
       else
+        context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
+      end
+
+      if stack.empty?
         if @store_manager.invalid?
           raise "store coordinator not found. Cannot create the first context without one."
         else
@@ -89,17 +126,62 @@ module CDQ
             #}
           }
         end
+      else
+        context.parentContext = stack.last
       end
-      push(context, &block)
+
+      if options[:named]
+        if respond_to?(options[:named])
+          raise "Cannot name a context '#{options[:named]}': conflicts with existing method"
+        end
+        self.class.send(:define_method, options[:named]) do
+          context
+        end
+      end
+      context
     end
 
-    # Save all contexts in the stack, starting with the current and working down.
+    # Save all passed contexts in order.  If none are supplied, save all
+    # contexts in the stack, starting with the current and working down.  If
+    # you pass a symbol instead of a context, it will look up context with
+    # that name.
     #
-    def save(options = {})
+    # Options:
+    #
+    #   always_wait: If true, force use of performBlockAndWait for synchronous
+    #     saves.  By default, private queue saves are performed asynchronously.
+    #     Main queue saves are always synchronous if performed from the main
+    #     queue.
+    #
+    def save(*contexts_and_options)
+
+      if contexts_and_options.last.is_a? Hash
+        options = contexts_and_options.pop
+      else
+        options = {}
+      end
+
+      if contexts_and_options.empty?
+        contexts = stack.reverse
+      else
+        # resolve named contexts
+        contexts = contexts_and_options.map do |c|
+          if c.is_a? Symbol
+            send(c)
+          else
+            c
+          end
+        end
+      end
+
       set_timestamps
       always_wait = options[:always_wait]
-      stack.reverse.each do |context|
-        if always_wait || context.concurrencyType == NSMainQueueConcurrencyType
+      contexts.each do |context|
+        if context.concurrencyType == NSMainQueueConcurrencyType && NSThread.isMainThread
+          with_error_object do |error|
+            context.save(error)
+          end
+        elsif always_wait
           context.performBlockAndWait( -> {
 
             with_error_object do |error|
@@ -140,7 +222,51 @@ module CDQ
       end
       true
     end
-    
+
+    # Run the supplied block in a new context with a private queue.  Once the
+    # block exits, the context will be forgotten, so any changes made must be
+    # saved within the block.
+    #
+    # Note that the CDQ context stack, which is used when deciding what to save
+    # with `cdq.save` is stored per-thread, so the stack inside the block is
+    # different from the stack outside the block. If you push any more contexts
+    # inside, they will also disappear when the thread terminates.
+    #
+    # The thread is also unique.  If you call `background` multiple times, it will
+    # be a different thread each time with no persisted state.
+    #
+    # Options:
+    #   wait: If true, run the block synchronously
+    #
+    def background(options = {}, &block)
+      # Create a new private queue context with the main context as its parent
+      context = create(NSPrivateQueueConcurrencyType)
+
+      on(context, options) do
+        push(context, {}, &block)
+      end
+
+    end
+
+    # Run a block on the supplied context using performBlock.  If context is a
+    # symbol, it will look up the corresponding named context and use that
+    # instead.
+    #
+    # Options:
+    #   wait: If true, run the block synchronously
+    #
+    def on(context, options = {}, &block)
+
+      if context.is_a? Symbol
+        context = send(context)
+      end
+
+      if options[:wait]
+        context.performBlockAndWait(block)
+      else
+        context.performBlock(block)
+      end
+    end
 
     def did_finish_import(notification)
       @observed_context.performBlockAndWait ->{
@@ -213,14 +339,19 @@ module CDQ
         end
       end
     end
-    
+
     def set_timestamps
       now = Time.now
-      eos = current.insertedObjects.allObjects + current.updatedObjects.allObjects
-      eos.each do |e|
-        e.created_at ||= now if e.respond_to? :created_at=
+
+      current.insertedObjects.allObjects.each do |e|
+        e.created_at = now if e.respond_to? :created_at=
         e.updated_at = now if e.respond_to? :updated_at=
       end
+
+      current.updatedObjects.allObjects.each do |e|
+        e.updated_at = now if e.respond_to? :updated_at=
+      end
+
     end
 
   end

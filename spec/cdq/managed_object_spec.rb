@@ -78,7 +78,8 @@ module CDQ
 
     it "returns a hash of attributes" do
       john = cdq(Writer).create(fee: 21.2, name: 'John Grisham')
-      john.attributes.should == { "fee" => 21.2, "name" => 'John Grisham' }
+      john.attributes['fee'].round(1).should.to_s == '21.2' # ugh floating point
+      john.attributes['name'].should == 'John Grisham'
     end
 
     describe "respond_to?" do
