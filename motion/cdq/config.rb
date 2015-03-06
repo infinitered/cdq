@@ -13,7 +13,7 @@ module CDQ
   #   [database_name]             The root name for the database file (relative to the database_dir)
   #   [model_name]                The root name for the model file (relative to the bundle directory)
   #   [app_group_id]              The app group id set in iTunes member center (group.com.mycompany.myapp)
-  #   [app_group_container_uuid]  WORKAROUND: The app group's UUID for iOS Simulator 6.1 which doesn't return an app group container path from the id
+  #   [app_group_container_uuid]  WORKAROUND: The app group's UUID for iOS Simulator 8.1 which doesn't return an app group container path from the id
   #   [icloud]                    If it's true, CDQ works with iCloud.
   #   [icloud_container]          Set id of iCloud container if you use iCloud. If it's nil, use first container listed in the com.apple.developer.ubiquity-container-identifiers entitlement array.
   #
