@@ -41,6 +41,13 @@ module CDQ
       @cc.all.should == [@context]
     end
 
+    it "can push a named NSManagedObjectContext onto its stack" do
+      @cc.push(@context, named: :ordinary)
+      @cc.current.should  == @context
+      @cc.ordinary.should == @context
+      @cc.all.should      == [@context]
+    end
+
     it "can pop a NSManagedObjectContext off its stack" do
       @cc.push(@context)
       @cc.pop.should == @context
