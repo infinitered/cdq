@@ -23,8 +23,10 @@ module CDQ
     def push(context, options = {}, &block)
       @has_been_set_up = true
 
-      unless context.is_a? NSManagedObjectContext
+      if !context.is_a?(NSManagedObjectContext)
         context = create(context, options)
+      elsif options[:named]
+        assign_name(options[:named], context)
       end
 
       if block_given?
@@ -120,10 +122,9 @@ module CDQ
           context.performBlockAndWait ->{
             coordinator = @store_manager.current
             context.persistentStoreCoordinator = coordinator
-            #Dispatch::Queue.main.async {
+
             NSNotificationCenter.defaultCenter.addObserver(self, selector:"did_finish_import:", name:NSPersistentStoreDidImportUbiquitousContentChangesNotification, object:nil)
             @observed_context = context
-            #}
           }
         end
       else
@@ -131,12 +132,7 @@ module CDQ
       end
 
       if options[:named]
-        if respond_to?(options[:named])
-          raise "Cannot name a context '#{options[:named]}': conflicts with existing method"
-        end
-        self.class.send(:define_method, options[:named]) do
-          context
-        end
+        assign_name(options[:named], context)
       end
       context
     end
@@ -277,6 +273,15 @@ module CDQ
 
 
     private
+
+    def assign_name(name, context)
+      if respond_to?(name)
+        raise "Cannot name a context '#{name}': conflicts with existing method"
+      end
+      self.class.send(:define_method, name) do
+        context
+      end
+    end
 
     def push_to_stack(value)
       lstack = stack
