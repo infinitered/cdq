@@ -191,6 +191,8 @@ all the data over to your main context all at once.  CDQ makes that easy too:
   cdq.save
 ```
 
+**NOTE** Custom class methods will have to `include CDQ` in order to have access to the `cdq` object. If you're calling `cdq` from a class method, you also have to `extend CDQ`.
+
 ### Deleting
 ```ruby
   author = Author.first
