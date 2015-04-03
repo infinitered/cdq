@@ -174,6 +174,15 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     objectID.URIRepresentation.absoluteString.inspect
   end
 
+  def method_missing(name, *args, &block)
+    if name[-1] == "?"
+      property_name = name[0...-1]
+      if entity.propertiesByName[property_name] && entity.propertiesByName[property_name].attributeType == NSBooleanAttributeType
+        send(property_name) == 1 ? true : false
+      end
+    end
+  end
+
   protected
 
   # Called from method that's dynamically added from

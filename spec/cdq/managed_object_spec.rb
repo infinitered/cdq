@@ -45,6 +45,17 @@ module CDQ
       Writer.attribute_names.should.include(:name)
     end
 
+    it "allows boolean access via ? methods" do
+      first = Article.create(published: true, title: "First Article")
+      second = Article.create(published: false, title: "Second Article")
+
+      first.published.should == 1
+      first.published?.should == true
+
+      second.published.should == 0
+      second.published?.should == false
+    end
+
     it "does not crash when respond_to? called on CDQManagedObject directly" do
       should.not.raise do
         CDQManagedObject.respond_to?(:foo)
