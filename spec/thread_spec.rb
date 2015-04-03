@@ -5,14 +5,14 @@ describe "multi threading" do
       include CDQ
     end
   end
-  
+
   it 'should word background' do
     Author.count.should == 0
-    
+
     parent = cdq.contexts.current
     Dispatch::Queue.concurrent.sync do
       cdq.contexts.push(parent)
-      cdq.contexts.new(NSConfinementConcurrencyType) do
+      cdq.contexts.push(NSConfinementConcurrencyType) do
         Author.create(name:"George")
         @result = cdq.save
       end
