@@ -117,6 +117,25 @@ app root, and they are versioned for automatic migrations, and this is what they
 
 Ruby-xcdm translates these files straight into the XML format that Xcode uses for datamodels.
 
+### Boolean Values
+
+Since CoreData stores boolean values as an `NSNumber`, cdq provides helper
+methods to allow you to get the boolean value of the property. Take the `Article`
+model from above with the `boolean`:`published`. If you call `published` directly
+you'll get the `NSNumber` `0` or `1`. If you call `published?` you'll get a
+boolean `true` or `false`
+
+```ruby
+article_1 = Article.create(published: true)
+article_2 = Article.create(published: false)
+
+article_1.published # => 1
+article_2.published # => 0
+
+article_1.published? # => true
+article_2.published? # => false
+```
+
 ## Context Management
 
 Managing NSManagedObjectContext objects in Core Data can be tricky, especially
