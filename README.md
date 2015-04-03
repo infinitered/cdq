@@ -117,6 +117,23 @@ app root, and they are versioned for automatic migrations, and this is what they
 
 Ruby-xcdm translates these files straight into the XML format that Xcode uses for datamodels.
 
+### Boolean values
+Boolean attributes are of type `Fixnum`, so compare with 1, or, if you're sure the attribute won't ever be nil, use `boolValue` when checking for true/false within ruby. Thus if `user.isAlive` is defined as a boolean in the schema file, you have to use
+
+```
+if user.isAlive.boolValue # or user.isAlive==1
+    #...
+end
+```
+
+, not
+
+```
+if user.isAlive
+   #...
+end
+```
+
 ## Context Management
 
 Managing NSManagedObjectContext objects in Core Data can be tricky, especially
