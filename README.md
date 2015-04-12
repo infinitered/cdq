@@ -287,6 +287,7 @@ objects.  There are several methods for getting at the data:
 
  * `array`
  * `first`
+ * `last`
  * `each`
  * `[]`
  * `map`
