@@ -25,7 +25,7 @@ module CDQ
         @predicate = self.where(@inverse_rel.name.to_sym => @owner).predicate
       end
     end
-    
+
     def dealloc
       super
     end
@@ -78,6 +78,10 @@ module CDQ
 
       def first
         array.first
+      end
+
+      def last
+        array.last
       end
 
       # duplicating a lot of common methods because it's way faster than using method_missing

@@ -13,9 +13,10 @@ module CDQ
 
       @author = Author.create(name: "eecummings")
       @article1 = @author.articles.create(author: @author, body: "", published: true, publishedAt: Time.local(1922), title: "The Enormous Room")
-
       cdq.save(always_wait: true)
 
+      @article2 = @author.articles.create(author: @author, body: "", published: true, publishedAt: Time.local(1922), title: "The Ginormous Room")
+      cdq.save(always_wait: true)
     end
 
     after do
@@ -25,12 +26,18 @@ module CDQ
 
     it "performs queries against the target entity" do
       @rq = CDQRelationshipQuery.new(@author, 'articles')
+
       @rq.first.should != nil
       @rq.first.class.should == Article_Article_
+      @rq.first.should == @article1
+
+      @rq.last.should != nil
+      @rq.last.class.should == Article_Article_
+      @rq.last.should == @article2
     end
 
     it "should be able to use named scopes" do
-      cdq(@author).articles.all_published.array.should == [@article1]
+      cdq(@author).articles.all_published.array.should == [@article1, @article2]
     end
 
     it "can handle many-to-many correctly" do
@@ -85,8 +92,11 @@ module CDQ
     it "can remove objects from the relationship" do
       article = Article.create(title: "thing", body: "bank")
       cdq.save
-      @author.articles.count.should == 1
+      @author.articles.count.should == 2
       @author.articles.remove(@article1)
+      cdq.save
+      @author.articles.count.should == 1
+      @author.articles.remove(@article2)
       cdq.save
       @author.articles.count.should == 0
     end
