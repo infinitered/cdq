@@ -66,6 +66,14 @@ module CDQ #:nodoc:
       limit(1).array.first
     end
 
+    # Return the last entity matching the query.
+    #
+    # Causes execution.
+    #
+    def last
+      offset(count-1).limit(1).array.first
+    end
+
     # Fetch a single entity from the query by index.  If the optional
     # <tt>length</tt> parameter is supplied, fetch a range of length <tt>length</tt>
     # starting at <tt>index</tt>

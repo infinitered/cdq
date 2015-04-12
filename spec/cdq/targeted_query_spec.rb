@@ -88,6 +88,10 @@ module CDQ
       @tq.sort_by(:name).first.should == @tseliot
     end
 
+    it "gets the last entry" do
+      @tq.sort_by(:name).last.should == @eecummings
+    end
+
     it "gets entries by index" do
       @tq.sort_by(:name)[0].should == @tseliot
       @tq.sort_by(:name)[1].should == @dante
