@@ -31,6 +31,14 @@ module CDQ
       @cp.get.should == @articles
     end
 
+    it "gets the first object" do
+      @cp.first.should == @articles.first
+    end
+
+    it "gets the last object" do
+      @cp.last.should == @articles.last
+    end
+
     it "can use a where query" do
       q = @cp.where(:title).contains(" of ").sort_by(:title)
       q.count.should == 3

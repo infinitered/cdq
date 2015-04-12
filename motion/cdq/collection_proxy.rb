@@ -26,6 +26,10 @@ module CDQ
       @objects.first
     end
 
+    def last
+      @objects.last
+    end
+
   end
 end
 
