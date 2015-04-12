@@ -52,9 +52,7 @@ module CDQ
     end
 
     def remove_all
-      @set.each do |obj|
-        remove(obj)
-      end
+      @set.removeAllObjects
     end
 
     def self.extend_set(set, owner, name)
