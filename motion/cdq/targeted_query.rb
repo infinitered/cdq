@@ -62,16 +62,18 @@ module CDQ #:nodoc:
     #
     # Causes execution.
     #
-    def first
-      limit(1).array.first
+    def first(n = 1)
+      result = limit(n).array
+      n == 1 ? result.first : result
     end
 
     # Return the last entity matching the query.
     #
     # Causes execution.
     #
-    def last
-      offset(count-1).limit(1).array.first
+    def last(n = 1)
+      result = offset(count - n).limit(n).array
+      n == 1 ? result.first : result
     end
 
     # Fetch a single entity from the query by index.  If the optional
