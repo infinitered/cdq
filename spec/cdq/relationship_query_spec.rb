@@ -91,6 +91,13 @@ module CDQ
       @author.articles.count.should == 0
     end
 
+    it "can remove all objects from the relationship" do
+      @author.articles.count.should == 1
+      @author.articles.remove_all
+      cdq.save
+      @author.articles.count.should == 0
+    end
+
     it "iterates over ordered sets correctly" do
       writer = Writer.create
       two = cdq('Spouse').create(name: "1")
