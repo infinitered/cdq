@@ -17,6 +17,11 @@ module CDQ
 
       @article2 = @author.articles.create(author: @author, body: "", published: true, publishedAt: Time.local(1922), title: "The Ginormous Room")
       cdq.save(always_wait: true)
+
+      @article3 = @author.articles.create(author: @author, body: "", published: true, publishedAt: Time.local(1922), title: "The Even Bigger Room")
+      cdq.save(always_wait: true)
+
+      @rq = CDQRelationshipQuery.new(@author, 'articles')
     end
 
     after do
@@ -25,19 +30,29 @@ module CDQ
     end
 
     it "performs queries against the target entity" do
-      @rq = CDQRelationshipQuery.new(@author, 'articles')
-
       @rq.first.should != nil
       @rq.first.class.should == Article_Article_
       @rq.first.should == @article1
+    end
 
+    it "should be able to get the first n of the query" do
+      @rq.first(2).should == [@article1, @article2]
+      @rq.first(3).should == [@article1, @article2, @article3]
+    end
+
+    it "should be able to get the last of the query" do
       @rq.last.should != nil
       @rq.last.class.should == Article_Article_
-      @rq.last.should == @article2
+      @rq.last.should == @article3
+    end
+
+    it "should be able to get the last n of the query" do
+      @rq.last(2).should == [@article2, @article3]
+      @rq.last(3).should == [@article1, @article2, @article3]
     end
 
     it "should be able to use named scopes" do
-      cdq(@author).articles.all_published.array.should == [@article1, @article2]
+      cdq(@author).articles.all_published.array.should == [@article1, @article2, @article3]
     end
 
     it "can handle many-to-many correctly" do
@@ -92,13 +107,13 @@ module CDQ
     it "can remove objects from the relationship" do
       article = Article.create(title: "thing", body: "bank")
       cdq.save
-      @author.articles.count.should == 2
+      @author.articles.count.should == 3
       @author.articles.remove(@article1)
       cdq.save
-      @author.articles.count.should == 1
+      @author.articles.count.should == 2
       @author.articles.remove(@article2)
       cdq.save
-      @author.articles.count.should == 0
+      @author.articles.count.should == 1
     end
 
     it "iterates over ordered sets correctly" do
