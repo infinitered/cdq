@@ -22,8 +22,12 @@ module CDQ
       @objects
     end
 
-    def first
-      @objects.first
+    def first(n = 1)
+      n == 1 ? @objects.first : @objects.first(n)
+    end
+
+    def last(n = 1)
+      n == 1 ? @objects.last : @objects.last(n)
     end
 
   end

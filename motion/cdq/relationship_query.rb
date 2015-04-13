@@ -25,7 +25,7 @@ module CDQ
         @predicate = self.where(@inverse_rel.name.to_sym => @owner).predicate
       end
     end
-    
+
     def dealloc
       super
     end
@@ -80,8 +80,12 @@ module CDQ
         self.allObjects
       end
 
-      def first
-        array.first
+      def first(n = 1)
+        n == 1 ? array.first : array.first(n)
+      end
+
+      def last(n = 1)
+        n == 1 ? array.last : array.last(n)
       end
 
       # duplicating a lot of common methods because it's way faster than using method_missing
