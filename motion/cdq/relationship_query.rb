@@ -51,6 +51,10 @@ module CDQ
       @set.removeObject obj
     end
 
+    def remove_all
+      @set.removeAllObjects
+    end
+
     def self.extend_set(set, owner, name)
       set.extend SetExt
       set.extend Enumerable
