@@ -117,7 +117,7 @@ module CDQ
     end
 
     it "can remove all objects from the relationship" do
-      @author.articles.count.should == 1
+      @author.articles.count.should == 3
       @author.articles.remove_all
       cdq.save
       @author.articles.count.should == 0
