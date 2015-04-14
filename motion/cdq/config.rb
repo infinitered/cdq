@@ -95,6 +95,9 @@ module CDQ
         end
     end
 
+    def self.default_config=(config_obj)
+      @default = config_obj
+    end
 
     private
 

@@ -24,7 +24,26 @@ module CDQ
       @@store_manager = nil
     end
 
+    # Save any data and close down the contexts and store manager.
+    # You should be able create a new CDQConfig object and run setup 
+    # again to attach to a different database.  However, you need to be sure
+    # that all activity is finished, and that any exisitng model instances
+    # have been deallocated.
+    #------------------------------------------------------------------------------
+    def close
+      save
+      @@context_manager.reset! if @@context_manager
+      @@context_manager        = nil
+      @@store_manager          = nil
+      CDQConfig.default_config = nil
+    end
+
+    # You can now pass in a CDQConfig object, which will be used instead of the
+    # one loaded from the cdq.yml file.  However, the model file is loaded during
+    # the loading of the code - so it can only be overridden using the cdq.yml.
+    #------------------------------------------------------------------------------
     def setup(opts = {})
+      CDQConfig.default_config = opts[:config] || nil
       if opts[:context]
         contexts.push(opts[:context])
         return true
