@@ -144,16 +144,10 @@ module CDQ
     end
 
     it "can create a scope with the same name for two entities without clashing" do
-      article = cdq('Article')
       a = article.create(publishedAt: Time.local(2001))
-      author = @tq
 
-      article.scope :past, cdq(:publishedAt).lt(Time.now)
-      author.scope :past, cdq(:name).eq('eecummings')
-
-      article.past.array.should == [a]
-      author.past.array.should == [@eecummings]
-
+      Article.clashing.array.should == [a]
+      Author.clashing.array.should == [@eecummings]
     end
   end
 end
