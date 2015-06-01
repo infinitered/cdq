@@ -133,6 +133,9 @@ module CDQ
 
         Article.clashing.array.should == [article]
         Writer.clashing.array.should == [writer]
+
+        cdq('Article').clashing.array.should == [atricle]
+        cdq('Writer').clashing.array.should == [writer]
       end
 
       describe "CDQ Managed Object dynamic scopes" do
