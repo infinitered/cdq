@@ -134,7 +134,7 @@ module CDQ
         Article.clashing.array.should == [article]
         Writer.clashing.array.should == [writer]
 
-        cdq('Article').clashing.array.should == [atricle]
+        cdq('Article').clashing.array.should == [article]
         cdq('Writer').clashing.array.should == [writer]
       end
 
