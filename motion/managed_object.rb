@@ -42,11 +42,11 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     def scope(name, query = nil, &block)
       cdq.scope(name, query, &block)
       if query
-        self.class.send(:define_method, name) do
+        define_method(name) do
           where(query)
         end
       else
-        self.class.send(:define_method, name) do |*args|
+        define_method(name) do |*args|
           where(block.call(*args))
         end
       end

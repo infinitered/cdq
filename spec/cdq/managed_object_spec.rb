@@ -127,6 +127,17 @@ module CDQ
         cdq('Writer').edgaralpoe.array.should == [@poe]
       end
 
+      it "are not clashing" do
+        article = Article.create(title: 'war & peace')
+        writer = Writer.create(name: 'rbachman', fee: 42.0)
+
+        Article.clashing.array.should == [article]
+        Writer.clashing.array.should == [writer]
+
+        cdq('Article').clashing.array.should == [article]
+        cdq('Writer').clashing.array.should == [writer]
+      end
+
       describe "CDQ Managed Object dynamic scopes" do
 
         class Writer
