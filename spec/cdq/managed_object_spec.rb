@@ -128,10 +128,10 @@ module CDQ
       end
 
       it "are not clashing" do
-        atricle = Article.create(title: 'war & peace')
+        article = Article.create(title: 'war & peace')
         writer = Writer.create(name: 'rbachman', fee: 42.0)
 
-        Article.clashing.array.should == [atricle]
+        Article.clashing.array.should == [article]
         Writer.clashing.array.should == [writer]
       end
 
