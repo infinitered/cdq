@@ -153,6 +153,25 @@ operations on objects use the topmost context.  You just call `cdq.save`
 and it saves the whole stack.  Or you can get a list of all the contexts in
 order with `cdq.contexts.all` and do more precise work.
 
+To access the `cdq` object from a class method inside a class that is not a `CDQManagedObject`
+subclass, make sure to include the `CDQ` module in your class like this:
+
+```ruby
+class MyClass
+  class << self
+    include CDQ
+
+    def my_class_method
+      # Do something
+      cdq.save
+    end
+  end
+end
+
+# Elsewhere
+MyClass.my_class_method
+```
+
 Settings things up the way you want is easy.  Here's how you'd set it up for asynchronous
 saves:
 
