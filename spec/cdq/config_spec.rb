@@ -124,7 +124,7 @@ module CDQ
     it "constructs model_url" do
       config = CDQConfig.new(nil)
       config.model_url.class.should == NSURL
-      config.model_url.path.should =~ %r{#{@bundle_name}_spec.app/#{@bundle_name}.momd$}
+      config.model_url.path.should =~ %r{#{@bundle_name}_spec.app/.*#{@bundle_name}.momd$}
     end
 
     def yaml_to_file(file, hash)

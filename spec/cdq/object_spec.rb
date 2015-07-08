@@ -53,6 +53,22 @@ module CDQ
       cdq.setup(context: context)
       cdq.contexts.current.should == context
     end
+
+    it "can open different database without deleting the previous one" do
+      org_database_url = CDQConfig.default.database_url.path
+      File.exist?(org_database_url).should == true
+      cdq.close
+
+      config = CDQConfig.new(name: "foo")
+      File.exist?(config.database_url.path).should == false
+      
+      cdq.setup(config: config)
+
+      CDQConfig.default.should == config
+      File.exist?(config.database_url.path).should == true
+      File.exist?(org_database_url).should == true
+    end
+
   end
 
 end

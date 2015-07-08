@@ -1,5 +1,7 @@
 $:.unshift("/Library/RubyMotion/lib")
-require 'motion/project/template/ios'
+
+platform = ENV.fetch('platform', 'ios')
+require "motion/project/template/#{platform}"
 
 require 'bundler'
 require 'bundler/gem_tasks'
