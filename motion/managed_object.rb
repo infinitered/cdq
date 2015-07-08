@@ -155,6 +155,16 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     end
   end
 
+  # Opt-in support for motion_print
+  def motion_print(mp, options)
+    if respond_to? :attributes
+      "OID: " + mp.colorize(oid.gsub('"',''), options[:force_color]) + "\n" + mp.l_hash(attributes, options)
+    else
+      # old colorless method, still more informative than nothing
+      log
+    end
+  end
+
   def ordered_set?(name)
     # isOrdered is returning 0/1 instead of documented BOOL
     ordered = entity.relationshipsByName[name].isOrdered
