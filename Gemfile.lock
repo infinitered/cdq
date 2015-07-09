@@ -3,7 +3,7 @@ PATH
   specs:
     cdq (1.0.3)
       motion-yaml
-      ruby-xcdm (~> 0.0, >= 0.0.9)
+      ruby-xcdm (>= 0.0.9)
 
 GEM
   remote: https://rubygems.org/
