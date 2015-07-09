@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "cdq"
   gem.require_paths = ["lib"]
-  gem.add_runtime_dependency 'ruby-xcdm', '~> 0.0', '>= 0.0.9'
+  gem.add_runtime_dependency 'ruby-xcdm', '>= 0.0.9'
   gem.add_runtime_dependency 'motion-yaml'
   gem.executables << 'cdq'
 
