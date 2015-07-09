@@ -120,6 +120,11 @@ module CDQ
       end
     end
 
+    it "returns nil if no last entry is present" do
+      CDQ.cdq.reset!
+      @tq.sort_by(:name).last.should == nil
+    end
+
     it "can map over entries" do
       entries = [@tseliot, @dante, @eecummings]
 

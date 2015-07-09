@@ -72,6 +72,7 @@ module CDQ #:nodoc:
     # Causes execution.
     #
     def last(n = 1)
+      return nil if count == 0
       result = offset(count - n).limit(n).array
       n == 1 ? result.first : result
     end
@@ -120,21 +121,21 @@ module CDQ #:nodoc:
       end
     end
 
-    # Calculates the sum of values on a given column. 
+    # Calculates the sum of values on a given column.
     #
     #   Author.sum(:fee) # => 6.0
     def sum(column_name)
       calculate(:sum, column_name)
     end
-    
-    # Calculates the average of values on a given column. 
+
+    # Calculates the average of values on a given column.
     #
     #   Author.average(:fee) # => 2.0
     def average(column_name)
       calculate(:average, column_name)
     end
 
-    # Calculates the minimum of values on a given column. 
+    # Calculates the minimum of values on a given column.
     #
     #   Author.min(:fee) # => 1.0
     def min(column_name)
@@ -142,7 +143,7 @@ module CDQ #:nodoc:
     end
     alias :minimum :min
 
-    # Calculates the maximum of values on a given column. 
+    # Calculates the maximum of values on a given column.
     #
     #   Author.max(:fee) # => 3.0
     def max(column_name)
