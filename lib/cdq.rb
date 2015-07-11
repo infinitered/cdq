@@ -4,7 +4,7 @@ unless defined?(Motion::Project::App)
 end
 
 require 'ruby-xcdm'
-require 'motion-yaml'
+require 'yaml'
 
 ENV['COLUMNS'] ||= `tput cols`.strip
 

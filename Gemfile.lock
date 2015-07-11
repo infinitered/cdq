@@ -2,7 +2,6 @@ PATH
   remote: .
   specs:
     cdq (1.0.4)
-      motion-yaml
       ruby-xcdm (>= 0.0.9)
 
 GEM
@@ -36,4 +35,5 @@ PLATFORMS
 DEPENDENCIES
   cdq!
   motion-stump
+  motion-yaml
   rake
