@@ -138,6 +138,10 @@ module CDQ
         cdq('Writer').clashing.array.should == [writer]
       end
 
+      it "are available to respond_to?" do
+        Writer.respond_to?(:by_name).should == true
+      end
+
       describe "CDQ Managed Object dynamic scopes" do
 
         class Writer
