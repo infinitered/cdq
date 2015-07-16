@@ -184,13 +184,19 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
     objectID.URIRepresentation.absoluteString.inspect
   end
 
-  def method_missing(name, *args, &block)
-    if name[-1] == "?"
-      property_name = name[0...-1]
-      if entity.propertiesByName[property_name] && entity.propertiesByName[property_name].attributeType == NSBooleanAttributeType
-        send(property_name) == 1 ? true : false
+  def method_missing(method, *args, &block)
+    name = method.to_s
+
+    if name.end_with? "?"
+      property_name = name.chop
+      property = entity.propertiesByName[property_name]
+
+      if property && property.attributeType == NSBooleanAttributeType
+        return send(property_name) == 1
       end
     end
+
+    super
   end
 
   protected

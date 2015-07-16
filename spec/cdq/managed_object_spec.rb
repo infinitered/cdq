@@ -93,6 +93,30 @@ module CDQ
       john.attributes['name'].should == 'John Grisham'
     end
 
+    describe "properly raises NoMehtodError" do
+      before do
+        @art = Article.new
+      end
+
+      it "with getter method" do
+        should.raise(NoMethodError) do
+          @art.oh_my_how_we_will_even_survived_this
+        end
+      end
+
+      it "with setter method" do
+        should.raise(NoMethodError) do
+          @art.oh_my_how_we_will_even_survived_this = true
+        end
+      end
+
+      it "with question mark method" do
+        should.raise(NoMethodError) do
+          @art.oh_my_how_we_will_even_survived_this?
+        end
+      end
+    end
+
     describe "respond_to?" do
 
       before do
