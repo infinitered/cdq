@@ -67,7 +67,7 @@ module CDQ
     def find(oid)
       url = NSURL.URLWithString(oid)
       object_id = stores.current.managedObjectIDForURIRepresentation(url)
-      contexts.current.existingObjectWithID(object_id, error: nil)
+      object_id ? contexts.current.existingObjectWithID(object_id, error: nil) : nil
     end
 
     protected
