@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cdq (1.0.6)
+    cdq (1.0.7)
       motion-yaml (= 1.4)
       ruby-xcdm (>= 0.0.9)
 
@@ -37,6 +37,3 @@ DEPENDENCIES
   cdq!
   motion-stump
   rake
-
-BUNDLED WITH
-   1.10.4
