@@ -5,6 +5,7 @@ end
 
 require 'ruby-xcdm'
 require 'yaml'
+require 'motion-yaml'
 
 ENV['COLUMNS'] ||= `tput cols`.strip
 
