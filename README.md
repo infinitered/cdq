@@ -237,6 +237,22 @@ You can also update multiple attributes of a single object:
   cdq.save
 ```
 
+The update command will raise an error if you try and set an attribute that doesn't exist on the object so it's good practice to sanitize the data before you call `update`:
+
+```ruby
+  new_author_data = {
+    name: "Mark Twain",
+    publish_count: 30,
+    first_published: 1865,
+    some_attribute_that_doesnt_exist_on_author: "balderdash!"
+  }  
+  sanitized = new_author_data.keep_if{|k,_| Author.attribute_names.include?(k) }
+
+  author = Author.first
+  author.update(sanitized)
+  cdq.save
+```
+
 **NOTE** Custom class methods will have to `include CDQ` in order to have access to the `cdq` object. If you're calling `cdq` from a class method, you also have to `extend CDQ`.
 
 ### Deleting
