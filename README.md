@@ -229,7 +229,7 @@ all the data over to your main context all at once.  CDQ makes that easy too:
   cdq.save
 ```
 
-You can also update multiple attributes af a single object:
+You can also update multiple attributes of a single object:
 
 ```ruby
   author = Author.first
