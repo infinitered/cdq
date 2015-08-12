@@ -56,6 +56,26 @@ module CDQ
       second.published?.should == false
     end
 
+    it "allows multiple property updates with `update()`" do
+      article = Article.create(published: true, title: "First Article")
+      article.published?.should == true
+      article.title.should == "First Article"
+      article_object_id = article.object_id
+
+      article.update(published: false, title: "First Article Fixed")
+      article.published?.should == false
+      article.title.should == "First Article Fixed"
+      article.object_id.should == article_object_id
+    end
+
+    it "raises an error when trying to update a property that doesn't exist with `update()`" do
+      article = Article.create(published: true, title: "First Article")
+
+      should.raise do
+        article.update(doesnt_exist: true)
+      end
+    end
+
     it "does not crash when respond_to? called on CDQManagedObject directly" do
       should.not.raise do
         CDQManagedObject.respond_to?(:foo)

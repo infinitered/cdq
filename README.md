@@ -229,6 +229,14 @@ all the data over to your main context all at once.  CDQ makes that easy too:
   cdq.save
 ```
 
+You can also update multiple attributes af a single object:
+
+```ruby
+  author = Author.first
+  author.update(name: "Mark Twain", publish_count: 30, first_published: 1865)
+  cdq.save
+```
+
 **NOTE** Custom class methods will have to `include CDQ` in order to have access to the `cdq` object. If you're calling `cdq` from a class method, you also have to `extend CDQ`.
 
 ### Deleting
