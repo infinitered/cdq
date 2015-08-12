@@ -237,7 +237,7 @@ You can also update multiple attributes of a single object:
   cdq.save
 ```
 
-The update command will raise an error if you try and set an attribute that doesn't exist on the object so it's good practice to sanitize the data before you call `update`:
+The update command will raise an `UnknownAttributeError` if you try and set an attribute that doesn't exist on the object so it's good practice to sanitize the data before you call `update`:
 
 ```ruby
   new_author_data = {

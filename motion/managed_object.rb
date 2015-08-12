@@ -104,7 +104,7 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
       if respond_to?("#{k}=")
         self.send("#{k}=", v)
       else
-        raise "#{self.class} does not respond to `#{k}=`"
+        raise UnknownAttributeError.new("#{self.class} does not respond to `#{k}=`")
       end
     end if args.is_a?(Hash)
   end
@@ -221,3 +221,5 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
   end
 
 end
+
+class UnknownAttributeError < StandardError; end

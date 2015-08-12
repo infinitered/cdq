@@ -83,7 +83,7 @@ module CDQ
     it "raises an error when trying to update a property that doesn't exist with `update()`" do
       article = Article.create(published: true, title: "First Article")
 
-      should.raise do
+      should.raise(UnknownAttributeError) do
         article.update(doesnt_exist: true)
       end
     end
