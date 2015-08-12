@@ -56,6 +56,18 @@ module CDQ
       second.published?.should == false
     end
 
+    it "allows single property updates with `update()`" do
+      article = Article.create(published: true, title: "First Article")
+      article.published?.should == true
+      article.title.should == "First Article"
+      article_object_id = article.object_id
+
+      article.update(title: "First Article Fixed")
+      article.published?.should == true
+      article.title.should == "First Article Fixed"
+      article.object_id.should == article_object_id
+    end
+
     it "allows multiple property updates with `update()`" do
       article = Article.create(published: true, title: "First Article")
       article.published?.should == true
