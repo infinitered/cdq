@@ -213,6 +213,8 @@ all the data over to your main context all at once.  CDQ makes that easy too:
   cdq.save
 ```
 
+CDQ will automatically set the object's property `created_at` to `Time.now` if it exists. If you want to use this ActiveRecord-like automatic attribute, make sure to add `datetime :created_at` to your schema's model definition.
+
 ### Reading
 
 ```ruby
@@ -230,6 +232,8 @@ all the data over to your main context all at once.  CDQ makes that easy too:
 ```
 
 **NOTE** Custom class methods will have to `include CDQ` in order to have access to the `cdq` object. If you're calling `cdq` from a class method, you also have to `extend CDQ`.
+
+CDQ will automatically set the object's property `updated_at` to `Time.now` if it exists. If you want to use this ActiveRecord-like automatic attribute, make sure to add `datetime :updated_at` to your schema's model definition.
 
 ### Deleting
 ```ruby
@@ -381,6 +385,65 @@ defining and using named scopes:
 > NOTE: strings and symbols are NOT interchangeable. `cdq('Entity')` gives you a
 query generator for an entity, but `cdq(:attribute)` starts a predicate for an
 attribute.
+
+## Reserved model attributes
+
+CDQ does some smart automatic attribute setting. If you add attributes `:created_at` and/or `:updated_at` to a model in your schema file, whenever a record is created or updated, these properties will be updated accordingly. Therefore, you can not define your own `:created_at` or `:updated_at` model attributes. These attributes must be of type `datetime`. Note that these attributes aren't set until you call `cdq.save`
+
+Example:
+
+```ruby
+schema "0001 initial" do
+  entity "Author" do
+    string :name, optional: false
+
+    datetime :created_at
+    datetime :updated_at
+  end
+end
+```
+
+```ruby
+a = Author.create(name: "Le Guin")
+# Notice that the properties aren't set yet
+#
+# <Author: 0x1175f9540> (entity: Author; id: 0x117504810
+# <x-coredata:///Author/tA4E22210-72CF-4272-BF2C-0C5C63A55B072> ; data: {
+#     name: "Le Guin";
+#     created_at: nil;
+#     updated_at: nil;
+# })
+
+cdq.save
+
+puts a # Original reference to created Author object
+# <Author: 0x1175f9540> (entity: Author; id: 0x117504810
+# <x-coredata:///Author/tA4E22210-72CF-4272-BF2C-0C5C63A55B072> ; data: {
+#     name: "Le Guin";
+#     created_at: 2015-08-19 20:44:40 +0000;
+#     updated_at: 2015-08-19 20:44:40 +0000;
+# })
+
+a.name = "Some Other Guy"
+puts a
+# Note that nothing has changed except the name:
+#
+# <Author: 0x1175f9540> (entity: Author; id: 0x117504810
+# <x-coredata:///Author/tA4E22210-72CF-4272-BF2C-0C5C63A55B072> ; data: {
+#     name: "Some Other Guy";
+#     created_at: 2015-08-19 20:44:40 +0000;
+#     updated_at: 2015-08-19 20:44:40 +0000;
+# })
+
+cdq.save
+puts a
+# <Author: 0x1175f9540> (entity: Author; id: 0x117504810
+# <x-coredata:///Author/tA4E22210-72CF-4272-BF2C-0C5C63A55B072> ; data: {
+#     name: "Some Other Guy";
+#     created_at: 2015-08-19 20:44:40 +0000;
+#     updated_at: 2015-08-19 20:47:40 +0000;
+# })
+```
 
 ## iCloud
 
