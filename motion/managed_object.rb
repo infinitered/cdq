@@ -99,6 +99,16 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
 
   end
 
+  def update(args)
+    args.each do |k,v|
+      if respond_to?("#{k}=")
+        self.send("#{k}=", v)
+      else
+        raise UnknownAttributeError.new("#{self.class} does not respond to `#{k}=`")
+      end
+    end if args.is_a?(Hash)
+  end
+
   # Register this object for destruction with the current context.  Will not
   # actually be removed until the context is saved.
   #
@@ -211,3 +221,5 @@ class CDQManagedObject < CoreDataQueryManagedObjectBase
   end
 
 end
+
+class UnknownAttributeError < StandardError; end
