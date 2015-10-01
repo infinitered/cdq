@@ -24,7 +24,10 @@ module CDQ
     end
 
     def reset!
+      path = @config.database_url.absoluteString
       NSFileManager.defaultManager.removeItemAtURL(@config.database_url, error: nil)
+      NSFileManager.defaultManager.removeItemAtURL(NSURL.URLWithString("#{path}-shm"), error: nil)
+      NSFileManager.defaultManager.removeItemAtURL(NSURL.URLWithString("#{path}-wal"), error: nil)
     end
 
     def invalid?
