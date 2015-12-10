@@ -41,11 +41,21 @@ schema "0.0.1" do
     datetime   :timestamp
     belongs_to :article
   end
-  
+
   entity "Timestamp" do
     boolean   :flag
     datetime  :created_at
     datetime  :updated_at
+  end
+
+  entity "Discussion" do
+    has_many :messages, deletionRule: "Cascade"
+    string :name
+  end
+
+  entity "Message" do
+    belongs_to :discussion
+    string :content
   end
 
 end
