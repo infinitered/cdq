@@ -96,7 +96,6 @@ app root, and they are versioned for automatic migrations, and this is what they
   schema "0001 initial" do
 
     entity "Article" do
-
       string    :body,        optional: false
       integer32 :length
       boolean   :published,   default: false
@@ -109,7 +108,9 @@ app root, and they are versioned for automatic migrations, and this is what they
     entity "Author" do
       float :fee
       string :name, optional: false
-      has_many :articles
+
+      # Deleting an author will delete all associated articles
+      has_many :articles, deletionRule: "Cascade"
     end
 
   end

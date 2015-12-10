@@ -18,3 +18,8 @@ end
 class Timestamp < CDQManagedObject
 end
 
+class Discussion < CDQManagedObject
+end
+
+class Message < CDQManagedObject
+end

@@ -134,7 +134,29 @@ module CDQ
       writer.spouses.array.map(&:name).should == ["3", "1", "2"]
     end
 
+    it "cascades deletions properly" do
+      Discussion.destroy_all!
+      Message.destroy_all!
+
+      message_count = 20
+
+      discussion = Discussion.create(name: "Test Discussion")
+
+      message_count.times do |i|
+        message = Message.create(content: "Message #{i}")
+        discussion.messages << message
+      end
+      cdq.save
+
+      discussion.messages.count.should == message_count
+      Message.count.should == message_count
+
+      discussion.destroy
+      cdq.save
+
+      Message.count.should == 0
+    end
+
   end
 
 end
-
