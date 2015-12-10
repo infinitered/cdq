@@ -445,6 +445,8 @@ puts a
 # })
 ```
 
+Also note that you should never use `object_id` as a model attribute as it will conflict with an internally generated property.
+
 ## iCloud
 
 As of version 0.1.10, there is some experimental support for iCloud, written by
