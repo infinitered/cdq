@@ -116,11 +116,13 @@ module CDQ
       @author.articles.count.should == 1
     end
 
-    it "can remove all objects from the relationship" do
+    it "can remove all objects from the relationship without deleting the linked object" do
+      Article.count.should == 3
       @author.articles.count.should == 3
       @author.articles.remove_all
       cdq.save
       @author.articles.count.should == 0
+      Article.count.should == 3
     end
 
     it "iterates over ordered sets correctly" do
