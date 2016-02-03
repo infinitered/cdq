@@ -9,7 +9,7 @@ XCode, or you can use [ruby-xcdm](https://github.com/infinitered/ruby-xcdm).
 [![Build Status](https://travis-ci.org/infinitered/cdq.png?branch=master)](https://travis-ci.org/infinitered/cdq)
 [![Gem Version](https://badge.fury.io/rb/cdq.png)](http://badge.fury.io/rb/cdq)
 
-CDQ is maintained by ![Infinite Red](http://infinite.red), a web and mobile development company based in Portland, OR and San Francisco, CA.
+CDQ is maintained by [Infinite Red](http://infinite.red), a web and mobile development company based in Portland, OR and San Francisco, CA.
 
 ## Get Started
 1. [Introducing CDQ](#introducingCDQ)
