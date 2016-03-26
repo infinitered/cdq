@@ -53,6 +53,7 @@ module CDQ
 
     it "should be able to use named scopes" do
       cdq(@author).articles.all_published.array.should == [@article1, @article2, @article3]
+      @author.articles.all_published.array.should == [@article1, @article2, @article3]
     end
 
     it "can handle many-to-many correctly" do
