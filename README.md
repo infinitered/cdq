@@ -507,3 +507,7 @@ $ rake args='-com.apple.CoreData.SQLDebug 3'
 ```
 
 `com.apple.CoreData.SQLDebug` takes a value between 1 and 3; the higher the value, the more verbose the output.
+
+## Premium Support
+
+[CDQ](https://github.com/infinitered/cdq), as an open source project, is free to use and always will be. [Infinite Red](https://infinite.red/) offers premium CDQ support and general mobile app design/development services. Email us at [hello@infinite.red](mailto:hello@infinite.red) to get in touch with us for more details.
