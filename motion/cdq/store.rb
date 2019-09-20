@@ -64,13 +64,13 @@ module CDQ
                       NSPersistentStoreUbiquitousContentNameKey => url.path.lastPathComponent.gsub(".", "_"),
                       NSPersistentStoreUbiquitousContentURLKey => icloud_url,
                     }
-          coordinator.lock
-          store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
-                                                     configuration:nil,
-                                                     URL:url,
-                                                     options:options,
-                                                     error:error)
-          coordinator.unlock
+          coordinator.performBlockAndWait( -> {
+            store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
+                                                           configuration:nil,
+                                                           URL:url,
+                                                           options:options,
+                                                           error:error)
+          })
 
           if store.nil?
             error[0].userInfo['metadata'] && error[0].userInfo['metadata'].each do |key, value|
