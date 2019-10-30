@@ -85,11 +85,15 @@ module CDQ
                       NSInferMappingModelAutomaticallyOption => true }
           url = @config.database_url
           mkdir_p File.dirname(url.path)
-          store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
-                                                         configuration:nil,
-                                                         URL:url,
-                                                         options:options,
-                                                         error:error)
+          
+          coordinator.performBlockAndWait( -> {
+            store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
+                                                           configuration:nil,
+                                                           URL:url,
+                                                           options:options,
+                                                           error:error)
+          })
+
           if store.nil?
             error[0].userInfo['metadata'] && error[0].userInfo['metadata'].each do |key, value|
               NSLog "#{key}: #{value}"
