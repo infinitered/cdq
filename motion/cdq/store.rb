@@ -57,13 +57,14 @@ module CDQ
         icloud_url = NSFileManager.defaultManager.URLForUbiquityContainerIdentifier(@icloud_container)
         if icloud_url
           error = Pointer.new(:object)
+          store = Pointer.new(:object)
           icloud_url = icloud_url.URLByAppendingPathComponent("data")
-          error = Pointer.new(:object)
           options = { NSMigratePersistentStoresAutomaticallyOption => true,
                       NSInferMappingModelAutomaticallyOption => true,
                       NSPersistentStoreUbiquitousContentNameKey => url.path.lastPathComponent.gsub(".", "_"),
                       NSPersistentStoreUbiquitousContentURLKey => icloud_url,
                     }
+
           coordinator.performBlockAndWait( -> {
             store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
                                                            configuration:nil,
@@ -81,11 +82,12 @@ module CDQ
 
         else
           error = Pointer.new(:object)
+          store = Pointer.new(:object)
           options = { NSMigratePersistentStoresAutomaticallyOption => true,
                       NSInferMappingModelAutomaticallyOption => true }
           url = @config.database_url
           mkdir_p File.dirname(url.path)
-          
+
           coordinator.performBlockAndWait( -> {
             store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
                                                            configuration:nil,
