@@ -57,7 +57,6 @@ module CDQ
         icloud_url = NSFileManager.defaultManager.URLForUbiquityContainerIdentifier(@icloud_container)
         if icloud_url
           error = Pointer.new(:object)
-          store = Pointer.new(:object)
           icloud_url = icloud_url.URLByAppendingPathComponent("data")
           options = { NSMigratePersistentStoresAutomaticallyOption => true,
                       NSInferMappingModelAutomaticallyOption => true,
@@ -65,13 +64,11 @@ module CDQ
                       NSPersistentStoreUbiquitousContentURLKey => icloud_url,
                     }
 
-          coordinator.performBlockAndWait( -> {
-            store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
-                                                           configuration:nil,
-                                                           URL:url,
-                                                           options:options,
-                                                           error:error)
-          })
+          store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
+                                                          configuration:nil,
+                                                          URL:url,
+                                                          options:options,
+                                                          error:error)
 
           if store.nil?
             error[0].userInfo['metadata'] && error[0].userInfo['metadata'].each do |key, value|
@@ -82,19 +79,16 @@ module CDQ
 
         else
           error = Pointer.new(:object)
-          store = Pointer.new(:object)
           options = { NSMigratePersistentStoresAutomaticallyOption => true,
                       NSInferMappingModelAutomaticallyOption => true }
           url = @config.database_url
           mkdir_p File.dirname(url.path)
 
-          coordinator.performBlockAndWait( -> {
-            store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
-                                                           configuration:nil,
-                                                           URL:url,
-                                                           options:options,
-                                                           error:error)
-          })
+          store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
+                                                          configuration:nil,
+                                                          URL:url,
+                                                          options:options,
+                                                          error:error)
 
           if store.nil?
             error[0].userInfo['metadata'] && error[0].userInfo['metadata'].each do |key, value|
