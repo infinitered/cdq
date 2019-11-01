@@ -475,6 +475,8 @@ Also note that you should never use `object_id` as a model attribute as it will 
 
 ## iCloud
 
+**Removed as of version 2.0.0.  If you still need this, pin cdq gem to before version 2.0.0**
+
 As of version 0.1.10, there is some experimental support for iCloud, written by
 @katsuyoshi.  Please try it out and let us know how it's working for you.  To
 enable, initialize like this:
