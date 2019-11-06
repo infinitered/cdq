@@ -1,5 +1,5 @@
 os: osx
-osx_image: xcode11.1
+osx_image: xcode11.2
 env:
   global:
     - RUBYMOTION_LICENSE=1dcac45cc434293009f74b33037bdf7361a3a1ff # Official license key for open-source projects
