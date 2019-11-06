@@ -76,18 +76,6 @@ module CDQ
       self.stack = []
     end
 
-    # Create and push a new context with the specified concurrency type.  Its parent
-    # will be set to the previous head context.  If a block is supplied, the new context
-    # will exist for the duration of the block and then the previous state will be restore_managerd.
-    #
-    # REMOVE1.1
-    #
-    def new(concurrency_type, &block)
-      deprecate "cdq.contexts.new() is deprecated.  Use push() or create()"
-      context = create(concurrency_type)
-      push(context, {}, &block)
-    end
-
     # Create a new context by type, setting upstream to the topmost context if available,
     # or to the persistent store coordinator if not.  Return the context but do NOT push it
     # onto the stack.
