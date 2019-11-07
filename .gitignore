@@ -13,3 +13,4 @@ tags
 pkg
 .yardoc
 *.gem
+Gemfile.lock
