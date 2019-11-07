@@ -31,7 +31,7 @@ module CDQ
 
 
       should.raise(RuntimeError) do
-        cc.push(NSPrivateQueueConcurrencyType)
+        cc.push(:private)
       end
     end
 
@@ -80,39 +80,25 @@ module CDQ
     it "can create a new context and push it to the top of the stack" do
       first = @cc.push(:private)
       @cc.current.should == first
-      @cc.current.persistentStoreCoordinator.should.not == nil
+      first.persistentStoreCoordinator.should.not == nil
       second = @cc.push(:main)
       @cc.current.should == second
-      @cc.current.parentContext.should == first
-    end
-
-    # REMOVE:1.1
-    it "can create a new context and push it to the top of the stack (deprecated)" do
-      CDQ::Deprecation.silence_deprecation = true
-      first = @cc.new(NSPrivateQueueConcurrencyType)
-      @cc.current.should.not == nil
-      @cc.current.concurrencyType.should == NSPrivateQueueConcurrencyType
-      @cc.current.parentContext.should == nil
-      @cc.current.persistentStoreCoordinator.should.not == nil
-      @cc.new(NSMainQueueConcurrencyType)
-      @cc.current.should.not == nil
-      @cc.current.concurrencyType.should == NSMainQueueConcurrencyType
-      @cc.current.parentContext.should == first
+      second.parentContext.should == first
     end
 
     it "can create a new context WITHOUT pushing it to the top of the stack" do
-      first = @cc.create(NSPrivateQueueConcurrencyType)
+      first = @cc.create(:private)
       first.class.should == NSManagedObjectContext
       @cc.current.should == nil
     end
 
     it "can create named contexts" do
-      first = @cc.create(NSPrivateQueueConcurrencyType, named: :special)
+      first = @cc.create(:private, named: :special)
       @cc.special.should == first
     end
 
     it "can run code on foreign contexts" do
-      @cc.create(NSPrivateQueueConcurrencyType, named: :foreign)
+      @cc.create(:private, named: :foreign)
       @cc.foreign.should.not == nil
       @cc.on(:foreign) do
         @cc.all.should == []
@@ -120,8 +106,8 @@ module CDQ
     end
 
     it "saves all contexts" do
-      root = @cc.push(NSPrivateQueueConcurrencyType)
-      main = @cc.push(NSMainQueueConcurrencyType)
+      root = @cc.push(:private)
+      main = @cc.push(:main)
       root_saved = false
       main_saved = false
 
@@ -135,8 +121,8 @@ module CDQ
     end
 
     it "saves specific contexts" do
-      root = @cc.push(NSPrivateQueueConcurrencyType)
-      main = @cc.push(NSMainQueueConcurrencyType)
+      root = @cc.push(:private)
+      main = @cc.push(:main)
       root_saved = false
       main_saved = false
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 $:.unshift("/Library/RubyMotion/lib")
 $:.unshift("~/.rubymotion/rubymotion-templates")
 
