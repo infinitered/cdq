@@ -99,7 +99,7 @@ Options:
 
         print "  \u0394  Adding schema:build hook to Rakefile... "
         File.open("Rakefile", "at") do |rakefile|
-          rakefile.puts('task :"build:simulator" => :"schema:build"')
+          rakefile.puts(%{\ntask :"build:simulator" => :"schema:build"})
         end
         puts "Done."
 
