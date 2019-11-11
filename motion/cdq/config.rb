@@ -1,6 +1,5 @@
 module CDQ
 
-
   # = Configure the CDQ Stack
   #
   # This class wraps the YAML configuration file that will allow you to
@@ -14,8 +13,6 @@ module CDQ
   #   [model_name]                The root name for the model file (relative to the bundle directory)
   #   [app_group_id]              The app group id set in iTunes member center (group.com.mycompany.myapp)
   #   [app_group_container_uuid]  WORKAROUND: The app group's UUID for iOS Simulator 8.1 which doesn't return an app group container path from the id
-  #   [icloud]                    If it's true, CDQ works with iCloud.
-  #   [icloud_container]          Set id of iCloud container if you use iCloud. If it's nil, use first container listed in the com.apple.developer.ubiquity-container-identifiers entitlement array.
   #
   # Using the config file is not necessary.  If you do not include it, the bundle display name
   # will be used.  For most people with a new app, this is what you want to do, especially if
@@ -26,7 +23,7 @@ module CDQ
   #
   class CDQConfig
 
-    attr_reader :config_file, :database_name, :database_dir, :model_name, :name, :icloud, :icloud_container, :app_group_id, :app_group_container_uuid
+    attr_reader :config_file, :database_name, :database_dir, :model_name, :name, :app_group_id, :app_group_container_uuid
 
     def initialize(config_file)
       h = nil
@@ -50,15 +47,6 @@ module CDQ
       @model_name = h['model_name'] || h[:model_name] || name
       @app_group_id = h['app_group_id'] || h[:app_group_id]
       @app_group_container_uuid = h['app_group_container_uuid'] || h[:app_group_container_uuid]
-      @icloud = begin
-        case h['icloud'] || h[:icloud]
-        when true, 1
-          true
-        else
-          false
-        end
-      end
-      @icloud_container = h['icloud_container'] || h[:icloud_container]
     end
     
     def database_url

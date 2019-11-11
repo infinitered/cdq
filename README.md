@@ -5,9 +5,10 @@ Core Data Query (CDQ) is a library to help you manage your Core Data stack
 while using RubyMotion.  It uses a data model file, which you can generate in
 XCode, or you can use [ruby-xcdm](https://github.com/infinitered/ruby-xcdm).
 
-[![Dependency Status](https://gemnasium.com/infinitered/cdq.png)](https://gemnasium.com/infinitered/cdq)
 [![Build Status](https://travis-ci.org/infinitered/cdq.png?branch=master)](https://travis-ci.org/infinitered/cdq)
 [![Gem Version](https://badge.fury.io/rb/cdq.png)](http://badge.fury.io/rb/cdq)
+
+CDQ is maintained by [Infinite Red](http://infinite.red), a web and mobile development company based in Portland, OR and San Francisco, CA.
 
 ## Get Started
 1. [Introducing CDQ](#introducingCDQ)
@@ -474,6 +475,8 @@ Also note that you should never use `object_id` as a model attribute as it will 
 
 ## iCloud
 
+**Removed as of version 2.0.0.  If you still need this, pin cdq gem to before version 2.0.0**
+
 As of version 0.1.10, there is some experimental support for iCloud, written by
 @katsuyoshi.  Please try it out and let us know how it's working for you.  To
 enable, initialize like this:
@@ -505,3 +508,7 @@ $ rake args='-com.apple.CoreData.SQLDebug 3'
 ```
 
 `com.apple.CoreData.SQLDebug` takes a value between 1 and 3; the higher the value, the more verbose the output.
+
+## Premium Support
+
+[CDQ](https://github.com/infinitered/cdq), as an open source project, is free to use and always will be. [Infinite Red](https://infinite.red/) offers premium CDQ support and general mobile app design/development services. Email us at [hello@infinite.red](mailto:hello@infinite.red) to get in touch with us for more details.

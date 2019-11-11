@@ -6,9 +6,11 @@ vendor/cdq/ext/ext.bridgesupport
 resources/*.nib
 resources/*.momd
 resources/*.storyboardc
+resources/*.xcdatamodeld
 examples/**/*.nib
 tags
 .rbenv-version
 pkg
 .yardoc
 *.gem
+Gemfile.lock
