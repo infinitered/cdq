@@ -3,6 +3,8 @@ module CDQ
 
   class CDQRelationshipQuery < CDQTargetedQuery
 
+    attr_reader :target_class
+
     def initialize(owner, name, set = nil, opts = {})
       @owner = owner ? WeakRef.new(owner) : nil
       @relationship_name = name
@@ -132,7 +134,7 @@ module CDQ
       end
 
       def method_missing(method, *args, &block)
-        if @__query__.respond_to?(method)
+        if @__query__.target_class.respond_to?(method) || @__query__.respond_to?(method)
           @__query__.send(method, *args, &block)
         else
           super
